@@ -629,6 +629,10 @@ footer {
     <div class="prayer-list" id="prayer-list">
       <p class="prayer-empty">No requests yet — be the first to share one.</p>
     </div>
+    <div style="display: flex; gap: 10px; margin-top: 16px; justify-content: center; flex-wrap: wrap;">
+      <button class="btn btn-ghost" id="export-prayers-btn" onclick="exportPrayers()">📥 Save Prayers</button>
+      <button class="btn btn-ghost" id="clear-prayers-btn" onclick="clearPrayersAfterMeeting()">Clear for Next Meeting</button>
+    </div>
   </section>
 
   <!-- Meeting -->
@@ -656,6 +660,14 @@ footer {
         <a href="https://maps.google.com/?q=1720+Alameda+Drive,+Spring+Hill,+FL+34609"
            target="_blank" rel="noopener" class="btn btn-primary">Get Directions</a>
         <button class="btn btn-ghost" id="rsvp-btn" onclick="rsvp(this)">I'll Be There ✓</button>
+      </div>
+    </div>
+
+    <!-- RSVPs -->
+    <div style="margin-top: 24px;">
+      <h3 style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 600; color: var(--text-1); margin-bottom: 12px; letter-spacing: 0.025em;">Confirmed Attendees</h3>
+      <div id="rsvp-list" style="display: flex; flex-direction: column; gap: 8px;">
+        <p style="font-family: 'Lora', serif; font-style: italic; font-size: 0.9rem; color: var(--text-3); text-align: center; padding: 16px 0;">No confirmations yet</p>
       </div>
     </div>
   </section>
@@ -912,57 +924,162 @@ setInterval(tick, 1000);
     } catch (_) {}
   }
 
+  // Export prayers to JSON file
+  window.exportPrayers = function () {
+    const allPrayers = localPrayers.length > 0 ? localPrayers : [];
+    const meetingTime = getNextThirdFriday();
+    const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Unknown Date';
+
+    const data = {
+      meetingDate: dateStr,
+      prayerCount: allPrayers.length,
+      exportedAt: new Date().toISOString(),
+      prayers: allPrayers.map(p => ({
+        request: p.text,
+        name: p.name || 'Anonymous',
+        lifts: p.lifts || 0,
+        addedAt: new Date(p.ts).toLocaleString()
+      }))
+    };
+
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fire-fellowship-prayers-${dateStr.replace(/\s+/g, '-')}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    alert(`✓ Saved ${allPrayers.length} prayers`);
+  };
+
+  // Clear prayers after meeting (archive first)
+  window.clearPrayersAfterMeeting = function () {
+    if (!confirm('This will:\n1. Save current prayers to a file\n2. Clear the wall for the next meeting\n\nContinue?')) return;
+
+    // Export first
+    window.exportPrayers();
+
+    // Clear local prayers
+    localPrayers = [];
+    try { localStorage.removeItem('ff_lifted'); } catch (_) {}
+    render([]);
+
+    // Clear from database if available
+    if (dbCol) {
+      try {
+        dbCol.where().delete().catch(() => {});
+      } catch (_) {}
+    }
+  };
+
+  // Auto-clear prayers after meeting date passes
+  (function checkAndClearExpiredPrayers() {
+    try {
+      const lastClearStr = localStorage.getItem('ff_prayers_last_clear');
+      const lastClear = lastClearStr ? parseInt(lastClearStr) : 0;
+      const meetingTime = getNextThirdFriday();
+      const previousMeetingTime = new Date(meetingTime.getTime() - (86400000 * 21)); // ~3 weeks ago
+
+      if (lastClear < previousMeetingTime.getTime() && Date.now() > meetingTime.getTime()) {
+        localPrayers = [];
+        try { localStorage.removeItem('ff_lifted'); } catch (_) {}
+        localStorage.setItem('ff_prayers_last_clear', Date.now().toString());
+        render([]);
+      }
+    } catch (_) {}
+  })();
+
   initDB();
   render(localPrayers);
 })();
 
 /* ── RSVP ───────────────────────────────────────────── */
-window.rsvp = function (btn) {
-  const name = prompt('What is your name?', '');
-  if (name === null) return;
-  const trimName = name.trim() || 'A brother';
-
-  // Send WhatsApp message
-  const meetingTime = getNextThirdFriday();
-  const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'the next meeting';
-  const msg = encodeURIComponent(`Hi Freddy! ${trimName} is confirming attendance for Fire & Fellowship on ${dateStr} at 7:00 PM.`);
-  const whatsappUrl = `https://wa.me/14079252589?text=${msg}`;
-  window.open(whatsappUrl, '_blank');
-
-  // Store RSVP with expiration
-  try {
-    const data = { name: trimName, timestamp: Date.now(), meetingTime: meetingTime ? meetingTime.getTime() : 0 };
-    localStorage.setItem('ff_rsvp', JSON.stringify(data));
-  } catch (_) {}
-
-  btn.textContent = 'See you there! 🔥';
-  btn.disabled = true;
-  btn.classList.remove('btn-ghost');
-  btn.style.cssText = 'background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.4);color:#C1440E;';
-};
-
-// Check and clear expired RSVP on load
 (function () {
-  try {
-    const data = JSON.parse(localStorage.getItem('ff_rsvp') || 'null');
-    if (data && data.meetingTime && Date.now() > data.meetingTime) {
-      localStorage.removeItem('ff_rsvp');
-      const btn = document.getElementById('rsvp-btn');
-      if (btn) {
-        btn.textContent = "I'll Be There ✓";
-        btn.disabled = false;
-        btn.classList.add('btn-ghost');
-        btn.style.cssText = '';
-      }
-    } else if (data) {
-      const btn = document.getElementById('rsvp-btn');
-      if (btn) {
-        btn.textContent = 'See you there! 🔥';
-        btn.disabled = true;
-        btn.classList.remove('btn-ghost');
-        btn.style.cssText = 'background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.4);color:#C1440E;';
-      }
+  let rsvps = [];
+
+  function renderRsvps() {
+    const el = document.getElementById('rsvp-list');
+    if (!rsvps.length) {
+      el.innerHTML = '<p style="font-family: \'Lora\', serif; font-style: italic; font-size: 0.9rem; color: var(--text-3); text-align: center; padding: 16px 0;">No confirmations yet</p>';
+      return;
     }
-  } catch (_) {}
+    const sorted = [...rsvps].sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    el.innerHTML = '';
+    sorted.forEach(r => {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center;';
+      badge.innerHTML = `<span style="font-family: \'Lora\', serif; font-size: 0.95rem; color: var(--text-1);">${r.name}</span><span style="font-size: 0.8rem; color: var(--text-3);">✓</span>`;
+      el.appendChild(badge);
+    });
+  }
+
+  function saveRsvps() {
+    try { localStorage.setItem('ff_rsvps', JSON.stringify(rsvps)); } catch (_) {}
+  }
+
+  function loadRsvps() {
+    try {
+      const stored = localStorage.getItem('ff_rsvps');
+      if (stored) rsvps = JSON.parse(stored);
+    } catch (_) {}
+    renderRsvps();
+  }
+
+  function checkAndClearExpiredRsvps() {
+    try {
+      const lastClearStr = localStorage.getItem('ff_rsvps_last_clear');
+      const lastClear = lastClearStr ? parseInt(lastClearStr) : 0;
+      const meetingTime = getNextThirdFriday();
+      const previousMeetingTime = new Date(meetingTime.getTime() - (86400000 * 21));
+
+      if (lastClear < previousMeetingTime.getTime() && Date.now() > meetingTime.getTime()) {
+        rsvps = [];
+        saveRsvps();
+        localStorage.setItem('ff_rsvps_last_clear', Date.now().toString());
+        renderRsvps();
+        const btn = document.getElementById('rsvp-btn');
+        if (btn) {
+          btn.textContent = "I'll Be There ✓";
+          btn.disabled = false;
+          btn.classList.add('btn-ghost');
+          btn.style.cssText = '';
+        }
+      }
+    } catch (_) {}
+  }
+
+  window.rsvp = function (btn) {
+    const name = prompt('What is your name?', '');
+    if (name === null) return;
+    const trimName = name.trim() || 'A brother';
+
+    // Send WhatsApp message
+    const meetingTime = getNextThirdFriday();
+    const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'the next meeting';
+    const msg = encodeURIComponent(`Hi Freddy! ${trimName} is confirming attendance for Fire & Fellowship on ${dateStr} at 7:00 PM.`);
+    const whatsappUrl = `https://wa.me/14079252589?text=${msg}`;
+    window.open(whatsappUrl, '_blank');
+
+    // Add to RSVP list
+    const existing = rsvps.find(r => r.name === trimName);
+    if (!existing) {
+      rsvps.push({ name: trimName, ts: Date.now() });
+      saveRsvps();
+      renderRsvps();
+    }
+
+    btn.textContent = 'See you there! 🔥';
+    btn.disabled = true;
+    btn.classList.remove('btn-ghost');
+    btn.style.cssText = 'background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.4);color:#C1440E;';
+  };
+
+  // Initialize on page load
+  loadRsvps();
+  checkAndClearExpiredRsvps();
 })();
 </script>
