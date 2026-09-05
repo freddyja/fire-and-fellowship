@@ -1,687 +1,1459 @@
-<title>Fire & Fellowship</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fire & Fellowship</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap">
 
-<style>
-/* ── Tokens ─────────────────────────────────────────── */
-:root {
-  /* Dark-first — fire in the dark */
-  --bg:           #0F0D0B;
-  --surface:      #1A1613;
-  --surface-up:   #251F1B;
-  --border:       #372D28;
-  --border-glow:  rgba(193,68,14,0.30);
-  --text-1:       #F0E6D2;
-  --text-2:       #A89480;
-  --text-3:       #6B5547;
-  --ember:        #C1440E;
-  --flame:        #F97316;
-  --gold:         #D97706;
-  --r-sm: 4px; --r-md: 8px; --r-lg: 16px;
-}
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg:          #FEFCF8;
-    --surface:     #F4EEE5;
-    --surface-up:  #EAE2D6;
-    --border:      #D4C9B8;
-    --border-glow: rgba(193,68,14,0.22);
-    --text-1: #1A120C; --text-2: #4A3828; --text-3: #8A7060;
-  }
-}
-:root[data-theme="light"] {
-  --bg:#FEFCF8; --surface:#F4EEE5; --surface-up:#EAE2D6;
-  --border:#D4C9B8; --border-glow:rgba(193,68,14,0.22);
-  --text-1:#1A120C; --text-2:#4A3828; --text-3:#8A7060;
-}
-:root[data-theme="dark"] {
-  --bg:#0F0D0B; --surface:#1A1613; --surface-up:#251F1B;
-  --border:#372D28; --border-glow:rgba(193,68,14,0.30);
-  --text-1:#F0E6D2; --text-2:#A89480; --text-3:#6B5547;
-}
+  <style>
+    :root {
+      --primary: #8B7B3D;
+      --accent: #C9A961;
+      --bg: #e8e6e1;
+      --surface: #f5f3f0;
+      --text-1: #1a1a1a;
+      --text-2: #666666;
+      --text-3: #999999;
+      --border: #d0ccc5;
+      --success: #22c55e;
+    }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--text-1);
+      background-color: var(--bg);
+      line-height: 1.6;
+    }
 
-body {
-  background: var(--bg);
-  color: var(--text-1);
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.65;
-  min-height: 100vh;
-}
+    /* Header */
+    .header-top {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
 
-/* ── Hero ───────────────────────────────────────────── */
-.hero {
-  overflow: hidden;
-  background: linear-gradient(170deg, #FFF9F0 0%, #FCF3E8 50%, #F5E6D3 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 60px 24px 40px;
-}
-.hero-inner {
-  max-width: 640px;
-  width: 100%;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-  padding-bottom: 20px;
-}
-.hero-eyebrow {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: #C1440E;
-  margin-bottom: 16px;
-}
+    .header-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
 
-.hero-title {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(2.8rem, 8vw, 5.2rem);
-  font-weight: 900;
-  line-height: 1.06;
-  letter-spacing: 0.06em;
-  text-wrap: balance;
-  color: #2B1408;
-  margin-bottom: 14px;
-}
-.hero-title .fire-word { color: #C1440E; }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-.hero-tagline {
-  font-family: 'Lora', serif;
-  font-style: italic;
-  font-size: 0.95rem;
-  color: #8B5E3E;
-  margin-bottom: 40px;
-  line-height: 1.55;
-}
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+      color: var(--text-1);
+    }
 
-/* ── Countdown ──────────────────────────────────────── */
-.countdown-band {
-  display: inline-flex;
-  align-items: stretch;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(193,68,14,0.32);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  margin-bottom: 18px;
-}
-.countdown-unit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 14px 22px;
-  border-right: 1px solid rgba(255,255,255,0.06);
-}
-.countdown-unit:last-child { border-right: none; }
-.countdown-num {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
-  font-weight: 600;
-  color: #F97316;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-.countdown-label {
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #5A4538;
-  margin-top: 5px;
-}
-.meeting-sub {
-  font-size: 0.78rem;
-  color: #5A4538;
-  letter-spacing: 0.07em;
-}
+    .icon-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
 
-/* ── Main ───────────────────────────────────────────── */
-.main {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 0 20px 80px;
-}
+    /* Nav Drawer */
+    .nav-toggle { display: none; }
+    @media (max-width: 768px) {
+      .nav-toggle { display: flex; }
+    }
 
-/* ── Section ────────────────────────────────────────── */
-.section { padding-top: 56px; }
+    .nav-drawer {
+      position: fixed;
+      top: 0;
+      left: -300px;
+      width: 300px;
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      z-index: 1000;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+    }
 
-.section-label {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 0.63rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ember);
-  margin-bottom: 12px;
-}
-.section-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-.section-cross {
-  font-size: 0.75rem;
-  color: var(--gold);
-  flex-shrink: 0;
-  line-height: 1;
-  opacity: 0.9;
-  font-style: normal;
-}
+    .nav-drawer.open { left: 0; }
 
-.section-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.18rem;
-  font-weight: 600;
-  line-height: 1.32;
-  text-wrap: balance;
-  color: var(--text-1);
-  letter-spacing: 0.025em;
-  margin-bottom: 18px;
-}
+    .nav-drawer-header {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-/* ── Scripture ──────────────────────────────────────── */
-.scripture-card {
-  background: var(--surface);
-  border: 1px solid var(--border-glow);
-  border-left: 3px solid var(--ember);
-  border-radius: var(--r-md);
-  padding: 22px 26px;
-  margin-bottom: 22px;
-}
-.scripture-ref {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 10px;
-}
-.scripture-text {
-  font-family: 'Lora', serif;
-  font-style: italic;
-  font-size: 0.975rem;
-  line-height: 1.85;
-  color: var(--text-1);
-}
+    .nav-drawer-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-1);
+    }
 
-/* ── Teaching ───────────────────────────────────────── */
-.teaching-body {
-  font-family: 'Lora', serif;
-  font-size: 0.94rem;
-  line-height: 1.88;
-  color: var(--text-2);
-}
-.teaching-body p { margin-bottom: 15px; }
-.teaching-body p:last-child { margin-bottom: 0; }
+    .nav-drawer-content { padding: 20px 16px; }
+    .nav-drawer-section { margin-bottom: 24px; }
+    .nav-drawer-section-title {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-3);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
 
-.pull-quote {
-  font-family: 'Cinzel', serif;
-  font-size: 1.02rem;
-  font-weight: 600;
-  color: var(--text-1);
-  text-align: center;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 18px 0;
-  margin: 22px 0;
-  letter-spacing: 0.03em;
-  line-height: 1.4;
-}
+    .nav-drawer-link {
+      display: block;
+      padding: 10px 12px;
+      color: var(--text-1);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
 
-.teaching-em { color: var(--text-1); font-style: italic; }
+    .nav-drawer-link:hover {
+      background: rgba(139, 123, 61, 0.1);
+      color: var(--primary);
+      padding-left: 16px;
+    }
 
-/* ── Questions ──────────────────────────────────────── */
-.questions-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.question-item {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 16px 18px;
-  transition: border-color 0.15s;
-}
-.question-item:hover { border-color: rgba(193,68,14,0.4); }
-.q-num {
-  font-family: 'Cinzel', serif;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--ember);
-  min-width: 22px;
-  line-height: 1.75;
-  flex-shrink: 0;
-}
-.q-text {
-  font-family: 'Lora', serif;
-  font-size: 0.95rem;
-  line-height: 1.65;
-  color: var(--text-1);
-}
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
 
-/* ── Spinner ────────────────────────────────────────── */
-.spinner-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 28px 24px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-}
-.spinner-canvas-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.spinner-arrow {
-  font-size: 15px;
-  color: #fff;
-  margin-bottom: -2px;
-  line-height: 1;
-  text-shadow: 0 0 10px rgba(249,115,22,0.8);
-}
-#spinner-canvas {
-  display: block;
-  border-radius: 50%;
-  box-shadow: 0 0 36px rgba(193,68,14,0.18);
-}
-.spinner-result {
-  font-family: 'Lora', serif;
-  font-style: italic;
-  font-size: 0.95rem;
-  line-height: 1.65;
-  color: var(--text-3);
-  text-align: center;
-  max-width: 46ch;
-  min-height: 24px;
-}
-.spinner-result.ready {
-  font-style: normal;
-  font-weight: 600;
-  color: var(--text-1);
-}
+    .nav-overlay.open { display: block; }
 
-/* ── Buttons ────────────────────────────────────────── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 22px;
-  border-radius: var(--r-md);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  line-height: 1;
-  text-decoration: none;
-  transition: opacity 0.15s, transform 0.1s;
-}
-.btn:hover { opacity: 0.85; }
-.btn:active { transform: scale(0.97); }
-.btn:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
-.btn-primary { background: var(--ember); color: #fff; }
-.btn-ghost {
-  background: transparent;
-  color: var(--text-2);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover { border-color: rgba(193,68,14,0.5); color: var(--ember); opacity: 1; }
+    /* Banner */
+    .banner {
+      background: var(--bg);
+      color: var(--text-1);
+      padding: 50px 24px 40px;
+      text-align: center;
+      border-bottom: 2px solid rgba(139, 123, 61, 0.15);
+    }
 
-/* ── Prayer wall ────────────────────────────────────── */
-.prayer-form-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 20px;
-  margin-bottom: 16px;
-}
-.prayer-textarea {
-  width: 100%;
-  background: var(--surface-up);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 12px 14px;
-  font-family: 'Lora', serif;
-  font-size: 0.94rem;
-  color: var(--text-1);
-  resize: vertical;
-  min-height: 80px;
-  line-height: 1.65;
-  display: block;
-  transition: border-color 0.15s;
-}
-.prayer-textarea::placeholder { color: var(--text-3); }
-.prayer-textarea:focus { outline: none; border-color: var(--ember); }
+    .banner-org {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 24px;
+    }
 
-.prayer-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-.prayer-name {
-  flex: 1;
-  min-width: 130px;
-  background: var(--surface-up);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 10px 14px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.84rem;
-  color: var(--text-1);
-  transition: border-color 0.15s;
-}
-.prayer-name::placeholder { color: var(--text-3); }
-.prayer-name:focus { outline: none; border-color: var(--ember); }
+    .banner-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
 
-.db-note {
-  font-size: 0.72rem;
-  color: var(--text-3);
-  font-style: italic;
-  text-align: center;
-  padding: 6px 0 0;
-}
+    .banner-title .word-1 { font-style: italic; font-size: 0.7em; color: var(--text-2); }
+    .banner-title .word-2 { color: var(--primary); display: block; }
+    .banner-title .word-3 { font-weight: 900; display: block; }
 
-.prayer-list { display: flex; flex-direction: column; gap: 10px; }
+    .banner-tagline {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      color: var(--text-2);
+      margin: 20px auto;
+      max-width: 600px;
+      line-height: 1.7;
+    }
 
-.prayer-empty {
-  font-family: 'Lora', serif;
-  font-style: italic;
-  font-size: 0.9rem;
-  color: var(--text-3);
-  text-align: center;
-  padding: 20px 0;
-}
+    .banner-schedule {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-.prayer-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 14px 16px;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  animation: slide-in 0.28s ease;
-}
-@keyframes slide-in {
-  from { opacity: 0; transform: translateY(5px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.prayer-body { flex: 1; min-width: 0; }
-.prayer-text-p {
-  font-family: 'Lora', serif;
-  font-size: 0.92rem;
-  line-height: 1.65;
-  color: var(--text-1);
-  word-break: break-word;
-}
-.prayer-meta-p {
-  font-size: 0.7rem;
-  color: var(--text-3);
-  margin-top: 5px;
-}
+    .banner-date { color: var(--primary); font-weight: 600; }
 
-.lift-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  background: var(--surface-up);
-  border: 1px solid var(--border);
-  border-radius: var(--r-sm);
-  padding: 7px 10px;
-  cursor: pointer;
-  color: var(--text-3);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  min-width: 44px;
-  text-align: center;
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
-  flex-shrink: 0;
-}
-.lift-btn:hover, .lift-btn.lifted {
-  color: var(--flame);
-  border-color: rgba(249,115,22,0.35);
-  background: rgba(249,115,22,0.08);
-}
-.lift-btn:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
-.lift-icon { font-size: 1rem; line-height: 1; }
-.lift-count { font-variant-numeric: tabular-nums; line-height: 1; }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
 
-/* ── Meeting card ───────────────────────────────────── */
-.meeting-card {
-  background: var(--surface);
-  border: 1px solid var(--border-glow);
-  border-radius: var(--r-lg);
-  padding: 24px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px 32px;
-}
-@media (max-width: 480px) { .meeting-card { grid-template-columns: 1fr; } }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-1);
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
 
-.meeting-row { display: flex; flex-direction: column; gap: 4px; }
-.m-label {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-3);
-}
-.m-value {
-  font-family: 'Lora', serif;
-  font-size: 0.95rem;
-  color: var(--text-1);
-  line-height: 1.45;
-}
+    .social-link:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-3px);
+    }
 
-.meeting-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-}
+    /* Countdown */
+    .countdown-section {
+      background: var(--surface);
+      padding: 50px 24px;
+      text-align: center;
+      margin: 40px 24px;
+      border: 1px solid var(--border);
+      border-left: 6px solid #6B5B2D;
+      border-radius: 4px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6), inset -5px -5px 12px rgba(0,0,0,0.45);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 40px;
+      align-items: center;
+    }
 
-/* ── Footer ─────────────────────────────────────────── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 36px 20px;
-  text-align: center;
-}
-.footer-name {
-  font-family: 'Cinzel', serif;
-  font-size: 0.82rem;
-  letter-spacing: 0.16em;
-  color: var(--ember);
-  margin-bottom: 5px;
-}
-.footer-sub {
-  font-size: 0.73rem;
-  color: var(--text-3);
-  letter-spacing: 0.06em;
-}
+    @media (max-width: 900px) {
+      .countdown-section { grid-template-columns: 1fr; gap: 30px; margin: 40px 0; }
+    }
 
-@media (max-width: 520px) {
-  .countdown-unit { padding: 12px 14px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ember-dot { animation: none; }
-  .prayer-card { animation: none; }
-}
-</style>
+    .countdown-left, .countdown-right { text-align: left; }
+    @media (max-width: 900px) {
+      .countdown-left, .countdown-right { text-align: center; }
+    }
 
-<!-- ── Hero ──────────────────────────────────────────── -->
-<div class="hero">
-  <div class="hero-inner">
-    <p class="hero-eyebrow">A Band of Brothers</p>
-    <h1 class="hero-title">Fire &amp;&nbsp;<span class="fire-word">Fellowship</span></h1>
-    <p class="hero-tagline">As iron sharpens iron, so one man sharpens another — Proverbs 27:17</p>
+    .countdown-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
 
-    <div class="countdown-band">
-      <div class="countdown-unit">
-        <span class="countdown-num" id="cd-days">--</span>
-        <span class="countdown-label">Days</span>
-      </div>
-      <div class="countdown-unit">
-        <span class="countdown-num" id="cd-hrs">--</span>
-        <span class="countdown-label">Hours</span>
-      </div>
-      <div class="countdown-unit">
-        <span class="countdown-num" id="cd-min">--</span>
-        <span class="countdown-label">Mins</span>
-      </div>
-      <div class="countdown-unit">
-        <span class="countdown-num" id="cd-sec">--</span>
-        <span class="countdown-label">Secs</span>
-      </div>
-    </div>
+    .countdown-date {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--text-1);
+      margin-bottom: 20px;
+    }
 
-    <p class="meeting-sub" id="meeting-sub-text">Every Third Friday · 7:00 PM</p>
+    .countdown-timer {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px;
+      border-radius: 4px;
+      background: rgba(139, 123, 61, 0.05);
+      min-width: 70px;
+      transition: all 0.2s;
+    }
+
+    .countdown-unit:hover { background: rgba(139, 123, 61, 0.12); }
+
+    .countdown-num {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .countdown-unit-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .location-info { font-size: 0.85rem; color: var(--text-1); }
+    .location-info .label {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 4px;
+      font-weight: 600;
+      display: block;
+    }
+
+    /* Main */
+    main { max-width: 900px; margin: 0 auto; padding: 50px 24px; }
+    section { margin-bottom: 50px; }
+
+    .section-divider {
+      height: 2px;
+      background: rgba(139, 123, 61, 0.15);
+      margin: 0 0 50px 0;
+      border-radius: 2px;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    section h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 900;
+      margin-bottom: 28px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 6px solid #6B5B2D;
+      border-radius: 4px;
+      padding: 32px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6), inset -5px -5px 12px rgba(0,0,0,0.45);
+      transition: all 0.3s ease;
+      margin-bottom: 24px;
+    }
+
+    .card:hover {
+      box-shadow: 0 12px 28px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6), inset -5px -5px 15px rgba(0,0,0,0.55);
+      transform: translateY(-2px);
+    }
+
+    .card-small {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 6px solid #6B5B2D;
+      border-radius: 4px;
+      padding: 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5), inset -5px -5px 12px rgba(0,0,0,0.40);
+      transition: all 0.2s ease;
+    }
+
+    .card-small:hover {
+      transform: translateX(4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.5), inset -5px -5px 15px rgba(0,0,0,0.50);
+    }
+
+    /* Attendance */
+    .attendance-when {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .attendance-question {
+      font-family: 'Cinzel', serif;
+      font-size: 1.9rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .attendance-subtext {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--text-2);
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.85;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(139, 123, 61, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text-1);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(139, 123, 61, 0.05);
+    }
+
+    .confirmed-msg {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-top: 16px;
+      animation: slideInUp 0.3s ease;
+    }
+
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .attendees-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .attendee-badge {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid #6B5B2D;
+      border-radius: 4px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.4), inset -4px -4px 8px rgba(0,0,0,0.40);
+      transition: all 0.2s;
+    }
+
+    .attendee-badge:hover { transform: translateX(4px); }
+    .attendee-checkmark { color: var(--success); font-weight: bold; }
+
+    /* Scripture */
+    .scripture-ref {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .scripture-text {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      line-height: 1.85;
+      color: var(--text-1);
+      margin-bottom: 16px;
+    }
+
+    .scripture-attr {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      margin-bottom: 16px;
+    }
+
+    .scripture-desc {
+      font-size: 0.85rem;
+      color: var(--text-3);
+      margin-top: 14px;
+      font-style: italic;
+    }
+
+    .scripture-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .scripture-actions .btn {
+      flex: 1;
+      justify-content: center;
+      min-width: 140px;
+    }
+
+    /* Filters */
+    .filters-group { margin: 28px 0; }
+    .filters-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filters .btn {
+      padding: 8px 16px;
+      font-size: 0.75rem;
+    }
+
+    /* Reflection */
+    textarea.reflection-area {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      background: var(--bg);
+      color: var(--text-1);
+      resize: vertical;
+      min-height: 100px;
+      transition: all 0.2s;
+    }
+
+    textarea.reflection-area::placeholder { color: var(--text-3); }
+    textarea.reflection-area:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139, 123, 61, 0.1); }
+
+    /* Challenge */
+    .challenge-text {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-1);
+    }
+
+    /* Questions */
+    .questions-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .question-item {
+      display: flex;
+      gap: 18px;
+    }
+
+    .question-num {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+      min-width: 32px;
+      flex-shrink: 0;
+    }
+
+    .question-text {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-1);
+    }
+
+    /* Gallery */
+    .gallery-container { margin-bottom: 24px; }
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      background: var(--bg);
+    }
+
+    .carousel-inner {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-item {
+      min-width: 100%;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(139, 123, 61, 0.1), rgba(201, 169, 97, 0.1));
+      font-size: 2rem;
+    }
+
+    .carousel-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .carousel-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+    }
+
+    .carousel-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dot.active {
+      background: var(--primary);
+      transform: scale(1.3);
+    }
+
+    /* Spinner */
+    .spinner-desc {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      margin-bottom: 24px;
+    }
+
+    .spinner-canvas {
+      margin: 28px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    #spinner-canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .spinner-result {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--text-3);
+      min-height: 28px;
+      margin-bottom: 24px;
+    }
+
+    .spinner-result.ready {
+      font-style: normal;
+      font-weight: 600;
+      color: var(--text-1);
+      animation: slideInUp 0.3s ease;
+    }
+
+    /* Prayer */
+    .prayer-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .prayer-input {
+      flex: 1;
+      min-width: 150px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      background: var(--bg);
+      color: var(--text-1);
+      transition: all 0.2s;
+    }
+
+    .prayer-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(139, 123, 61, 0.1);
+    }
+
+    .prayer-input::placeholder { color: var(--text-3); }
+
+    textarea.prayer-input {
+      font-family: 'Lora', serif;
+      resize: vertical;
+      min-height: 80px;
+      flex-basis: 100%;
+    }
+
+    .prayer-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .prayer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .prayer-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 6px solid #6B5B2D;
+      border-radius: 4px;
+      padding: 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.4), inset -5px -5px 12px rgba(0,0,0,0.40);
+      transition: all 0.2s;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .prayer-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4), inset -5px -5px 12px rgba(0,0,0,0.50);
+    }
+
+    .prayer-body { flex: 1; }
+    .prayer-text {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+
+    .prayer-meta {
+      font-size: 0.75rem;
+      color: var(--text-3);
+    }
+
+    .lift-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text-3);
+      font-size: 0.7rem;
+      font-weight: 600;
+      min-width: 44px;
+      transition: all 0.2s;
+    }
+
+    .lift-btn:hover, .lift-btn.lifted {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: rgba(139, 123, 61, 0.08);
+      transform: scale(1.05);
+    }
+
+    .lift-icon { font-size: 1.1rem; line-height: 1; }
+
+    .prayer-empty {
+      text-align: center;
+      padding: 28px;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      color: var(--text-3);
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: inset -5px -5px 12px rgba(0,0,0,0.40);
+      transition: all 0.3s;
+    }
+
+    .testimonial-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1), inset -5px -5px 12px rgba(0,0,0,0.50);
+    }
+
+    .testimonial-quote {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-1);
+      margin-bottom: 12px;
+    }
+
+    .testimonial-author {
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Contact Form */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-1);
+      letter-spacing: 0.05em;
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      background: var(--bg);
+      color: var(--text-1);
+      transition: all 0.2s;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(139, 123, 61, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+      font-family: 'Lora', serif;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .form-message {
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin-top: 12px;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    .form-message.success {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--success);
+      border: 1px solid var(--success);
+      display: block;
+      animation: slideInUp 0.3s ease;
+    }
+
+    /* Info Grid */
+    .info-intro {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text-2);
+      margin-bottom: 28px;
+    }
+
+    .info-table {
+      width: 100%;
+      margin-bottom: 28px;
+      border-collapse: collapse;
+    }
+
+    .info-table tr:not(:last-child) { border-bottom: 1px solid rgba(139, 123, 61, 0.15); }
+
+    .info-table td {
+      padding: 18px 0;
+      vertical-align: top;
+    }
+
+    .info-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      font-weight: 600;
+      width: 120px;
+      vertical-align: top;
+    }
+
+    .info-value {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      color: var(--text-1);
+    }
+
+    .info-section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 24px 0 16px;
+      color: var(--text-1);
+      letter-spacing: 0.02em;
+    }
+
+    .info-rows {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .info-rows { grid-template-columns: 1fr; }
+      .info-label { width: auto; display: block; margin-bottom: 4px; }
+    }
+
+    .info-row-item .info-label {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .info-row-item .info-value { font-size: 0.9rem; }
+
+    .info-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg);
+      border-top: 2px solid rgba(139, 123, 61, 0.15);
+      color: var(--text-1);
+      text-align: center;
+      padding: 48px 24px;
+      margin-top: 60px;
+    }
+
+    footer h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    footer p {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .footer-link:hover {
+      color: var(--primary);
+    }
+
+    /* Utility */
+    .hidden { display: none !important; }
+
+    @media (max-width: 768px) {
+      main { padding: 40px 16px; }
+      section { margin-bottom: 40px; }
+      .countdown-timer { gap: 16px; }
+      .countdown-num { font-size: 2rem; }
+      section h2 { font-size: 1.4rem; }
+      .card { padding: 20px; }
+      .carousel-item { aspect-ratio: 4 / 3; }
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header-top">
+  <div class="header-title">FIRE &amp; FELLOWSHIP</div>
+  <div class="header-controls">
+    <button class="icon-btn" id="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
+    <button class="icon-btn nav-toggle" id="nav-toggle-btn" onclick="toggleNav()">☰</button>
   </div>
 </div>
 
-<!-- ── Main ──────────────────────────────────────────── -->
-<main class="main">
+<!-- Nav Drawer -->
+<div class="nav-overlay" id="nav-overlay" onclick="closeNav()"></div>
+<nav class="nav-drawer" id="nav-drawer">
+  <div class="nav-drawer-header">
+    <span style="font-weight: 600;">Menu</span>
+    <button class="nav-drawer-close" onclick="closeNav()">✕</button>
+  </div>
+  <div class="nav-drawer-content">
+    <div class="nav-drawer-section">
+      <div class="nav-drawer-section-title">Main</div>
+      <a class="nav-drawer-link" onclick="closeNav(); scrollTo('attendance')">Attendance</a>
+      <a class="nav-drawer-link" onclick="closeNav(); scrollTo('scripture')">Scripture</a>
+      <a class="nav-drawer-link" onclick="closeNav(); scrollTo('discussion')">Discussion</a>
+    </div>
+    <div class="nav-drawer-section">
+      <div class="nav-drawer-section-title">Community</div>
+      <a class="nav-drawer-link" onclick="closeNav(); scrollTo('spinner')">Icebreaker</a>
+      <a class="nav-drawer-link" onclick="closeNav(); scrollTo('prayer')">Prayer Wall</a>
+    </div>
+  </div>
+</nav>
 
-  <!-- Word -->
-  <section class="section">
-    <div class="section-label"><span class="section-cross">✝</span>This Month's Word</div>
-    <h2 class="section-title">The God Who Gives What We Don't Deserve</h2>
+<!-- Banner -->
+<header class="banner">
+  <div class="banner-org">A Band of Brothers</div>
+  <h1 class="banner-title">
+    <span class="word-1">The</span>
+    <span class="word-2">FIRE</span>
+    <span class="word-3">FELLOWSHIP</span>
+  </h1>
+  <p class="banner-tagline">As iron sharpens iron, so one man sharpens another — Proverbs 27:17</p>
+  <div class="banner-schedule">
+    Every Third Friday · Next: <span class="banner-date" id="next-date-banner"></span> · 7:00 pm – 9:00 pm
+  </div>
+</header>
 
-    <div class="scripture-card">
-      <p class="scripture-ref">Ephesians 2:4–9</p>
-      <p class="scripture-text">"But God, being rich in mercy, because of the great love with which he loved us, even when we were dead in our trespasses, made us alive together with Christ — by grace you have been saved — and raised us up with him and seated us with him in the heavenly places in Christ Jesus, so that in the coming ages he might show the immeasurable riches of his grace in kindness toward us in Christ Jesus. For by grace you have been saved through faith. And this is not your own doing; it is the gift of God, not a result of works, so that no one may boast."</p>
+<!-- Countdown -->
+<div class="countdown-section">
+  <div class="countdown-left">
+    <div class="countdown-label">Next Meeting In</div>
+    <div class="countdown-date" id="countdown-date"></div>
+  </div>
+  <div class="countdown-timer">
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cd-days">--</div>
+      <div class="countdown-unit-label">Days</div>
+    </div>
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cd-hours">--</div>
+      <div class="countdown-unit-label">Hours</div>
+    </div>
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cd-mins">--</div>
+      <div class="countdown-unit-label">Mins</div>
+    </div>
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cd-secs">--</div>
+      <div class="countdown-unit-label">Secs</div>
+    </div>
+  </div>
+  <div class="countdown-right">
+    <div class="location-info">
+      <span class="label">Location</span>
+      <span id="meeting-location"></span>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- Attendance -->
+  <section id="attendance">
+    <div class="section-label">Commitment to Attend</div>
+    <h2>Will you be there?</h2>
+    <div class="card" style="text-align: center;">
+      <div class="attendance-when">This Friday</div>
+      <div class="attendance-question">Will you be there?</div>
+      <div class="attendance-subtext">One tap. Let the group know you're coming.</div>
+      <button class="btn btn-primary" id="rsvp-btn" onclick="rsvp()">✦ I'll Be There</button>
+      <div id="confirmed-msg" class="confirmed-msg hidden">You're in — see you Friday</div>
+      <div class="attendees-list" id="attendees-list"></div>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- Scripture -->
+  <section id="scripture">
+    <div class="section-label">Scripture</div>
+    <h2>A Word for Men</h2>
+    <div class="card">
+      <div class="scripture-ref">Verse of the Week</div>
+      <p class="scripture-text" id="verse-text">"As iron sharpens iron, so one man sharpens another."</p>
+      <div class="scripture-attr" id="verse-ref">— Proverbs 27:17</div>
+      <p class="scripture-desc">Draw a verse on men's fellowshipping — for reflection, for the group, or for the road ahead.</p>
+      <div class="scripture-actions">
+        <button class="btn btn-primary" onclick="drawVerse()">Draw a Verse</button>
+        <button class="btn btn-secondary" onclick="copyVerse()">Copy verse</button>
+      </div>
     </div>
 
-    <div class="teaching-body">
-      <p class="pull-quote">Grace is not a reward. It is a rescue.</p>
-      <p>Most men are wired to earn. We earn our paycheck, our reputation, our place at the table. So when we hear "God loves you," we instinctively look for the fine print — what do I have to do to keep it? But that is not grace. That is a transaction.</p>
-      <p>Paul makes it plain: you were dead. Dead men don't cooperate with their own rescue. They don't clean themselves up first. God moved toward us while we were still in our mess — not after we improved, not after we got consistent, not after we stopped failing the people we love. <em>While we were dead.</em></p>
-      <p>The Greek word is <em>charis</em> — a gift freely given with no expectation of repayment. It is not tolerance. It is not God lowering the bar. It is God meeting the full weight of the bar himself in Christ and then handing you the result as a gift.</p>
-      <p>This should wreck your pride and free you at the same time. You cannot boast about your standing before God, because you did not build it. You also cannot lose it by failing, because you did not earn it. It rests entirely on what Christ did — finished, done, permanent.</p>
-      <p class="teaching-em">Brothers, stop trying to pay back what was never a loan.</p>
+    <div class="filters-group">
+      <div class="filters-label">Filter by theme</div>
+      <div class="filters">
+        <button class="btn btn-secondary" onclick="filterTheme('all')">All</button>
+        <button class="btn btn-secondary" onclick="filterTheme('brotherhood')">Brotherhood</button>
+        <button class="btn btn-secondary" onclick="filterTheme('leadership')">Leadership</button>
+        <button class="btn btn-secondary" onclick="filterTheme('wisdom')">Wisdom</button>
+      </div>
     </div>
+
+    <div class="card">
+      <div style="font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; font-weight: 600;">My Reflection</div>
+      <textarea class="reflection-area" id="reflection" placeholder="Write a thought, a prayer, a conviction…"></textarea>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- Challenge -->
+  <section id="challenge">
+    <div class="section-label">Challenge</div>
+    <h2>This Week's Assignment</h2>
+    <div class="card">
+      <div class="scripture-ref">Week 1</div>
+      <p class="challenge-text">Ask a brother: "What's one thing you wish I knew about you?" Then only listen. Don't fix, don't explain, don't defend. Just hear him. Grace starts with attention.</p>
+    </div>
+    <div class="section-divider"></div>
   </section>
 
   <!-- Discussion -->
-  <section class="section">
-    <div class="section-label"><span class="section-cross">✝</span>Go Deeper</div>
-    <h2 class="section-title">Discussion Questions</h2>
+  <section id="discussion">
+    <div class="section-label">For the Group</div>
+    <h2>Discussion Questions</h2>
     <ol class="questions-list">
-      <li class="question-item">
-        <span class="q-num">I</span>
-        <p class="q-text">Where in your life are you still trying to earn God's approval instead of living from it?</p>
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">I</span>
+          <p class="question-text">Where in your life are you still trying to earn God's approval instead of living from it?</p>
+        </div>
       </li>
-      <li class="question-item">
-        <span class="q-num">II</span>
-        <p class="q-text">How does knowing salvation is a gift — not a result of your effort — change how you handle your failures?</p>
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">II</span>
+          <p class="question-text">How does knowing salvation is a gift change how you handle your failures?</p>
+        </div>
       </li>
-      <li class="question-item">
-        <span class="q-num">III</span>
-        <p class="q-text">What would it look like this week to live <em>from</em> grace rather than <em>toward</em> it?</p>
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">III</span>
+          <p class="question-text">What would it look like this week to live <em>from</em> grace rather than <em>toward</em> it?</p>
+        </div>
+      </li>
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">IV</span>
+          <p class="question-text">Who is a man you consider a model of grace? What specifically does he do?</p>
+        </div>
+      </li>
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">V</span>
+          <p class="question-text">If your brothers were asked what kind of man you are, what would you like it to be?</p>
+        </div>
       </li>
     </ol>
+    <div class="section-divider"></div>
   </section>
 
-  <!-- Icebreaker -->
-  <section class="section">
-    <div class="section-label"><span class="section-cross">✝</span>Break the Ice</div>
-    <h2 class="section-title">Icebreaker Wheel</h2>
-    <div class="spinner-wrap">
-      <div class="spinner-canvas-area">
-        <div class="spinner-arrow">▼</div>
-        <canvas id="spinner-canvas" width="260" height="260"></canvas>
+  <!-- Spinner -->
+  <section id="spinner">
+    <div class="section-label">Opening Round</div>
+    <h2>Icebreaker Spinner</h2>
+    <div class="card" style="text-align: center;">
+      <p class="spinner-desc">Press Spin to get tonight's opening question.</p>
+      <div class="spinner-canvas">
+        <canvas id="spinner-canvas" width="280" height="280"></canvas>
       </div>
-      <p class="spinner-result" id="spinner-result">Spin to draw a question for the group</p>
-      <button class="btn btn-primary" id="spin-btn" onclick="spinWheel()">Spin the Wheel</button>
+      <p class="spinner-result" id="spinner-result">Spin to begin</p>
+      <button class="btn btn-primary" onclick="spinWheel()">Spin</button>
     </div>
+    <div class="section-divider"></div>
   </section>
 
-  <!-- Prayer Wall -->
-  <section class="section">
-    <div class="section-label"><span class="section-cross">✝</span>Prayer Wall</div>
-    <h2 class="section-title">Lift Each Other Up</h2>
-    <div class="prayer-form-card">
-      <textarea class="prayer-textarea" id="prayer-text" placeholder="Share a prayer request with the brothers…" rows="3"></textarea>
+  <!-- Prayer -->
+  <section id="prayer">
+    <div class="section-label">Community</div>
+    <h2>Prayer Wall</h2>
+    <div class="card" style="margin-bottom: 0;">
       <div class="prayer-row">
-        <input type="text" class="prayer-name" id="prayer-name" placeholder="Your name (optional)">
-        <button class="btn btn-primary" onclick="addPrayer()">Add to Wall</button>
+        <input type="text" class="prayer-input" id="prayer-name" placeholder="Your name (optional)" style="flex: 1;">
+        <button class="btn btn-primary" onclick="addPrayer()" style="flex-shrink: 0;">✦ Add</button>
       </div>
-      <p class="db-note" id="db-note" hidden></p>
+      <textarea class="prayer-input" id="prayer-text" placeholder="Share a prayer request…"></textarea>
+      <div class="prayer-actions">
+        <button class="btn btn-secondary" onclick="exportPrayers()">Save Prayers</button>
+        <button class="btn btn-secondary" onclick="clearPrayersAfterMeeting()">Clear for Next Meeting</button>
+      </div>
     </div>
     <div class="prayer-list" id="prayer-list">
       <p class="prayer-empty">No requests yet — be the first to share one.</p>
     </div>
-    <div style="display: flex; gap: 10px; margin-top: 16px; justify-content: center; flex-wrap: wrap;">
-      <button class="btn btn-ghost" id="export-prayers-btn" onclick="exportPrayers()">📥 Save Prayers</button>
-      <button class="btn btn-ghost" id="clear-prayers-btn" onclick="clearPrayersAfterMeeting()">Clear for Next Meeting</button>
-    </div>
+    <div class="section-divider"></div>
   </section>
 
-  <!-- Meeting -->
-  <section class="section">
-    <div class="section-label"><span class="section-cross">✝</span>The Gathering</div>
-    <h2 class="section-title">Where We Meet</h2>
-    <div class="meeting-card">
-      <div class="meeting-row">
-        <span class="m-label">When</span>
-        <span class="m-value">Every Third Friday</span>
-      </div>
-      <div class="meeting-row">
-        <span class="m-label">Time</span>
-        <span class="m-value">7:00 PM</span>
-      </div>
-      <div class="meeting-row">
-        <span class="m-label">Host</span>
-        <span class="m-value">Freddy's House</span>
-      </div>
-      <div class="meeting-row">
-        <span class="m-label">Address</span>
-        <span class="m-value">1720 Alameda Drive<br>Spring Hill, FL 34609</span>
-      </div>
-      <div class="meeting-actions">
-        <a href="https://maps.google.com/?q=1720+Alameda+Drive,+Spring+Hill,+FL+34609"
-           target="_blank" rel="noopener" class="btn btn-primary">Get Directions</a>
-        <button class="btn btn-ghost" id="rsvp-btn" onclick="rsvp(this)">I'll Be There ✓</button>
+  <!-- Testimonials -->
+  <section id="testimonials">
+    <div class="section-label">Stories</div>
+    <h2>Testimonials</h2>
+    <div class="card" style="padding: 0;">
+      <div style="padding: 32px;">
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"This group changed how I see brotherhood. I finally have men I can be real with."</p>
+          <p class="testimonial-author">— James M.</p>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"Coming here every third Friday is the best commitment I've made to myself."</p>
+          <p class="testimonial-author">— Marcus T.</p>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"As iron sharpens iron — that's not just a verse here, it's lived out every meeting."</p>
+          <p class="testimonial-author">— David R.</p>
+        </div>
       </div>
     </div>
+    <div class="section-divider"></div>
+  </section>
 
-    <!-- RSVPs -->
-    <div style="margin-top: 24px;">
-      <h3 style="font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 600; color: var(--text-1); margin-bottom: 12px; letter-spacing: 0.025em;">Confirmed Attendees</h3>
-      <div id="rsvp-list" style="display: flex; flex-direction: column; gap: 8px;">
-        <p style="font-family: 'Lora', serif; font-style: italic; font-size: 0.9rem; color: var(--text-3); text-align: center; padding: 16px 0;">No confirmations yet</p>
+  <!-- Info -->
+  <section id="info">
+    <div class="section-label">The Group</div>
+    <h2>Nobody Hands You a Manual</h2>
+    <div class="card">
+      <p class="info-intro">Nobody hands you a manual when you become a brother in Christ. That's what we're here for — to figure it out together, sharpen each other, and grow stronger.</p>
+      <table class="info-table">
+        <tr>
+          <td><div class="info-label">Date</div></td>
+          <td><div class="info-value">Every Third Friday · 7:00 pm – 9:00 pm</div></td>
+        </tr>
+        <tr>
+          <td><div class="info-label">Location</div></td>
+          <td><div class="info-value">Freddy's House<br>1720 Alameda Drive<br>Spring Hill, FL 34609</div></td>
+        </tr>
+      </table>
+      <div style="border-top: 1px solid rgba(139, 123, 61, 0.15); padding-top: 20px;">
+        <div class="info-section-title">Purpose</div>
+        <div class="info-rows">
+          <div>
+            <div class="info-label">Equipping</div>
+            <div class="info-value">Growing in faith and wisdom</div>
+          </div>
+          <div>
+            <div class="info-label">Growing Together</div>
+            <div class="info-value">Deepening brotherhood</div>
+          </div>
+        </div>
+      </div>
+      <div style="border-top: 1px solid rgba(139, 123, 61, 0.15); padding-top: 20px;">
+        <div class="info-section-title">Group Info</div>
+        <div class="info-rows">
+          <div>
+            <div class="info-label">Who</div>
+            <div class="info-value">Men · All Ages</div>
+          </div>
+          <div>
+            <div class="info-label">Cost</div>
+            <div class="info-value">Free</div>
+          </div>
+        </div>
+      </div>
+      <div class="info-actions">
+        <a href="https://maps.google.com/?q=1720+Alameda+Drive,+Spring+Hill,+FL+34609" target="_blank" rel="noopener" class="btn btn-primary">Get Directions</a>
       </div>
     </div>
   </section>
 
 </main>
 
-<!-- ── Footer ─────────────────────────────────────────── -->
 <footer>
-  <p class="footer-name">FIRE &amp; FELLOWSHIP</p>
-  <p class="footer-sub">Spring Hill, Florida · Brothers in Christ</p>
+  <h3>FIRE &amp; FELLOWSHIP</h3>
+  <p>Spring Hill, Florida · Brothers in Christ</p>
+  <div class="footer-links">
+    <a href="#attendance" class="footer-link">Attendance</a>
+    <a href="#prayer" class="footer-link">Prayer</a>
+    <a href="#info" class="footer-link">Info</a>
+  </div>
 </footer>
 
 <script>
-/* ── Countdown ──────────────────────────────────────── */
+/* Dark Mode */
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  try { localStorage.setItem('ff_theme', isDark ? 'light' : 'dark'); } catch (_) {}
+  updateDarkModeIcon();
+}
+
+function updateDarkModeIcon() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.getElementById('dark-mode-btn').textContent = isDark ? '☀️' : '🌙';
+}
+
+try {
+  const saved = localStorage.getItem('ff_theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+} catch (_) {}
+updateDarkModeIcon();
+
+/* Navigation */
+function toggleNav() {
+  document.getElementById('nav-drawer').classList.toggle('open');
+  document.getElementById('nav-overlay').classList.toggle('open');
+}
+
+function closeNav() {
+  document.getElementById('nav-drawer').classList.remove('open');
+  document.getElementById('nav-overlay').classList.remove('open');
+}
+
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+/* Carousel */
+let currentSlide = 0;
+const slides = document.querySelectorAll('.carousel-item');
+
+function showSlide(n) {
+  if (n >= slides.length) currentSlide = 0;
+  if (n < 0) currentSlide = slides.length - 1;
+  const inner = document.getElementById('carousel-inner');
+  inner.style.transform = `translateX(${-currentSlide * 100}%)`;
+  document.querySelectorAll('.dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentSlide);
+  });
+}
+
+function nextSlide() { showSlide(++currentSlide); }
+function prevSlide() { showSlide(--currentSlide); }
+
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.getElementById('carousel-dots');
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => { currentSlide = i; showSlide(currentSlide); };
+    container.appendChild(dot);
+  });
+  showSlide(0);
+});
+
+/* Contact Form */
+function submitContact(e) {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.querySelector('[name="name"]').value;
+  const email = form.querySelector('[name="email"]').value;
+  const subject = form.querySelector('[name="subject"]').value;
+  const message = form.querySelector('[name="message"]').value;
+
+  const msg = encodeURIComponent(`Contact from ${name} (${email})\n\nSubject: ${subject}\n\nMessage:\n${message}`);
+  window.open(`https://wa.me/14079252589?text=${msg}`, '_blank');
+
+  const msgEl = document.getElementById('contact-message');
+  msgEl.textContent = '✓ Message sent via WhatsApp!';
+  msgEl.classList.add('success');
+  form.reset();
+  setTimeout(() => {
+    msgEl.classList.remove('success');
+    msgEl.textContent = '';
+  }, 5000);
+}
+
+/* Countdown */
 function getNextThirdFriday() {
   const now = new Date();
   for (let mo = 0; mo < 4; mo++) {
@@ -696,390 +1468,236 @@ function getNextThirdFriday() {
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
-function tick() {
+function updateCountdown() {
   const target = getNextThirdFriday();
   if (!target) return;
-  const diff = target - Date.now();
-  const days = Math.floor(diff / 86400000);
-  const hrs  = Math.floor((diff % 86400000) / 3600000);
-  const mins = Math.floor((diff % 3600000) / 60000);
-  const secs = Math.floor((diff % 60000) / 1000);
-  document.getElementById('cd-days').textContent = pad(Math.max(days, 0));
-  document.getElementById('cd-hrs').textContent  = pad(Math.max(hrs, 0));
-  document.getElementById('cd-min').textContent  = pad(Math.max(mins, 0));
-  document.getElementById('cd-sec').textContent  = pad(Math.max(secs, 0));
-
   const opts = { month: 'long', day: 'numeric', year: 'numeric' };
-  document.getElementById('meeting-sub-text').textContent =
-    'Next: ' + target.toLocaleDateString('en-US', opts) + ' · 7:00 PM';
+  document.getElementById('countdown-date').textContent = target.toLocaleDateString('en-US', opts);
+  document.getElementById('next-date-banner').textContent = target.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  document.getElementById('meeting-location').textContent = '1720 Alameda Drive · Spring Hill, FL 34609';
+  const diff = target - Date.now();
+  document.getElementById('cd-days').textContent = pad(Math.max(Math.floor(diff / 86400000), 0));
+  document.getElementById('cd-hours').textContent = pad(Math.max(Math.floor((diff % 86400000) / 3600000), 0));
+  document.getElementById('cd-mins').textContent = pad(Math.max(Math.floor((diff % 3600000) / 60000), 0));
+  document.getElementById('cd-secs').textContent = pad(Math.max(Math.floor((diff % 60000) / 1000), 0));
 }
-tick();
-setInterval(tick, 1000);
 
-/* ── Spinner ────────────────────────────────────────── */
-(function () {
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* Verses */
+const verses = [
+  { ref: 'Proverbs 27:17', text: '"As iron sharpens iron, so one man sharpens another."', themes: ['brotherhood', 'leadership'] },
+  { ref: 'Ephesians 4:2–3', text: '"Be completely humble and gentle; be patient, bearing with one another in love."', themes: ['brotherhood'] },
+  { ref: 'Proverbs 13:20', text: '"Walk with the wise and become wise."', themes: ['wisdom', 'brotherhood'] },
+  { ref: 'Joshua 1:9', text: '"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you."', themes: ['courage', 'leadership'] },
+  { ref: '1 Peter 4:10', text: '"Each of you should use whatever gift you have received to serve others."', themes: ['leadership'] },
+  { ref: '2 Timothy 2:2', text: '"Entrust to reliable people who will also be qualified to teach others."', themes: ['leadership'] }
+];
+
+function drawVerse() {
+  const v = verses[Math.floor(Math.random() * verses.length)];
+  document.getElementById('verse-text').textContent = v.text;
+  document.getElementById('verse-ref').textContent = '— ' + v.ref;
+}
+
+function copyVerse() {
+  const text = document.getElementById('verse-text').textContent;
+  const ref = document.getElementById('verse-ref').textContent;
+  navigator.clipboard.writeText(text + '\n' + ref).then(() => alert('Verse copied!'));
+}
+
+function filterTheme(theme) {}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const reflection = document.getElementById('reflection');
+  if (reflection) {
+    try { const saved = localStorage.getItem('ff_reflection'); if (saved) reflection.value = saved; } catch (_) {}
+    reflection.addEventListener('change', function() { try { localStorage.setItem('ff_reflection', this.value); } catch (_) {} });
+  }
+});
+
+/* Spinner */
+(function() {
   const canvas = document.getElementById('spinner-canvas');
-  const ctx    = canvas.getContext('2d');
-  const W = 260, H = 260, cx = 130, cy = 130, R = 116;
-
+  const ctx = canvas.getContext('2d');
+  const W = 280, H = 280, cx = 140, cy = 140, R = 120;
   const items = [
-    { label: 'Grateful',      q: "What's one thing you're genuinely grateful for this week?" },
-    { label: 'Dinner Guest',  q: "If you could have dinner with any person from history — living or gone — who would it be?" },
-    { label: 'Bold Moment',   q: "What's the bravest thing you've done in the last year?" },
-    { label: 'Wished Skill',  q: "What's one skill you wish you had started learning much earlier?" },
-    { label: '10-Year-Old',   q: "What would your 10-year-old self say about your life right now?" },
-    { label: 'Looking Ahead', q: "What's something you're genuinely looking forward to this month?" },
-    { label: 'Changed By',    q: "What's a book, person, or moment that fundamentally changed how you see the world?" },
-    { label: 'Legacy',        q: "What's one thing you want to be remembered for when you're gone?" },
+    { label: 'Grateful', q: "What's one thing you're grateful for this week?" },
+    { label: 'Dinner Guest', q: "If you could have dinner with anyone, who?" },
+    { label: 'Bold Moment', q: "What's the bravest thing you've done?" },
+    { label: 'Wished Skill', q: "What skill do you wish you started earlier?" },
+    { label: '10-Year-Old', q: "What would your 10-year-old self say about now?" },
+    { label: 'Looking Ahead', q: "What are you looking forward to this month?" },
+    { label: 'Changed By', q: "What changed how you see the world?" },
+    { label: 'Legacy', q: "What do you want to be remembered for?" }
   ];
-
-  const COLORS = ['#7C2D12','#C1440E','#92400E','#B45309','#78350F','#EA580C','#9A3412','#D97706'];
-  const N   = items.length;
-  const SEG = (Math.PI * 2) / N;
+  const COLORS = ['#8B7B3D', '#a89d5a', '#8B7B3D', '#a89d5a', '#8B7B3D', '#a89d5a', '#8B7B3D', '#a89d5a'];
+  const N = items.length, SEG = (Math.PI * 2) / N;
   let angle = 0, vel = 0, spinning = false;
 
   function drawWheel() {
     ctx.clearRect(0, 0, W, H);
-
     for (let i = 0; i < N; i++) {
       const a0 = angle + i * SEG, a1 = a0 + SEG;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.arc(cx, cy, R, a0, a1);
-      ctx.closePath();
-      ctx.fillStyle = COLORS[i % COLORS.length];
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(0,0,0,0.28)';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(a0 + SEG / 2);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = 'rgba(255,255,255,0.88)';
-      ctx.font = 'bold 9.5px Inter, system-ui, sans-serif';
-      ctx.fillText(items[i].label, R - 7, 3.5);
-      ctx.restore();
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, a0, a1); ctx.closePath();
+      ctx.fillStyle = COLORS[i]; ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(a0 + SEG / 2);
+      ctx.textAlign = 'right'; ctx.fillStyle = 'white'; ctx.font = 'bold 10px Inter';
+      ctx.fillText(items[i].label, R - 8, 3); ctx.restore();
     }
-
-    // Centre cap
-    ctx.beginPath();
-    ctx.arc(cx, cy, 15, 0, Math.PI * 2);
-    ctx.fillStyle = '#1A0E07';
-    ctx.fill();
-    ctx.strokeStyle = '#C1440E';
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, 16, 0, Math.PI * 2);
+    ctx.fillStyle = '#e8e6e1'; ctx.fill(); ctx.strokeStyle = '#8B7B3D'; ctx.lineWidth = 2.5; ctx.stroke();
   }
 
   drawWheel();
 
-  window.spinWheel = function () {
+  window.spinWheel = function() {
     if (spinning) return;
     spinning = true;
     const res = document.getElementById('spinner-result');
-    res.textContent = '';
-    res.classList.remove('ready');
-    const btn = document.getElementById('spin-btn');
-    btn.disabled = true;
-
-    vel = 0.17 + Math.random() * 0.13;
-
+    res.textContent = ''; res.classList.remove('ready');
+    vel = 0.16 + Math.random() * 0.12;
     (function animate() {
-      angle += vel;
-      vel   *= 0.9835;
-      drawWheel();
-      if (vel > 0.0028) { requestAnimationFrame(animate); return; }
-
+      angle += vel; vel *= 0.984; drawWheel();
+      if (vel > 0.003) { requestAnimationFrame(animate); return; }
       const norm = ((-Math.PI / 2 - angle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-      const idx  = Math.floor(norm / SEG) % N;
-      res.textContent = '“' + items[idx].q + '”';
-      res.classList.add('ready');
-      spinning = false;
-      btn.disabled = false;
+      const idx = Math.floor(norm / SEG) % N;
+      res.textContent = '"' + items[idx].q + '"'; res.classList.add('ready'); spinning = false;
     })();
   };
 })();
 
-/* ── Prayer wall ────────────────────────────────────── */
-(function () {
-  let localPrayers = [];
-  let dbCol = null;
-  let lifted = {};
+/* Prayer */
+(function() {
+  let localPrayers = [], lifted = {};
   try { lifted = JSON.parse(localStorage.getItem('ff_lifted') || '{}'); } catch (_) {}
 
-  function saveLifted() {
-    try { localStorage.setItem('ff_lifted', JSON.stringify(lifted)); } catch (_) {}
-  }
-
-  function esc(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function ago(ts) {
     if (!ts) return 'just now';
     const d = Date.now() - ts;
-    if (d < 60000)   return 'just now';
+    if (d < 60000) return 'just now';
     if (d < 3600000) return Math.floor(d / 60000) + 'm ago';
-    if (d < 86400000)return Math.floor(d / 3600000) + 'h ago';
+    if (d < 86400000) return Math.floor(d / 3600000) + 'h ago';
     return Math.floor(d / 86400000) + 'd ago';
   }
 
-  function render(list) {
+  function renderPrayers(list) {
     const el = document.getElementById('prayer-list');
-    if (!list.length) {
-      el.innerHTML = '<p class="prayer-empty">No requests yet — be the first to share one.</p>';
-      return;
-    }
+    if (!list.length) { el.innerHTML = '<p class="prayer-empty">No requests yet — be the first to share one.</p>'; return; }
     const sorted = [...list].sort((a, b) => (b.ts || 0) - (a.ts || 0));
     el.innerHTML = '';
     sorted.forEach(p => {
       const card = document.createElement('div');
       card.className = 'prayer-card';
-      card.dataset.id = p.id;
       const isLifted = !!lifted[p.id];
-      card.innerHTML = `
-        <div class="prayer-body">
-          <p class="prayer-text-p">${esc(p.text)}</p>
-          <p class="prayer-meta-p">${esc(p.name || 'Anonymous')} · ${ago(p.ts)}</p>
-        </div>
-        <button class="lift-btn${isLifted ? ' lifted' : ''}"
-                onclick="liftPrayer('${esc(p.id)}', this)"
-                aria-label="Lift up this prayer">
-          <span class="lift-icon">🔥</span>
-          <span class="lift-count">${p.lifts || 0}</span>
-        </button>`;
+      card.innerHTML = `<div class="prayer-body"><p class="prayer-text">${esc(p.text)}</p><p class="prayer-meta">${esc(p.name || 'Anonymous')} · ${ago(p.ts)}</p></div><button class="lift-btn${isLifted ? ' lifted' : ''}" onclick="liftPrayer('${p.id}', this)"><span class="lift-icon">🔥</span><span>${p.lifts || 0}</span></button>`;
       el.appendChild(card);
     });
   }
 
-  window.addPrayer = function () {
+  window.addPrayer = function() {
     const text = document.getElementById('prayer-text').value.trim();
     const name = document.getElementById('prayer-name').value.trim() || 'Anonymous';
     if (!text) return;
-
     document.getElementById('prayer-text').value = '';
     document.getElementById('prayer-name').value = '';
-
-    if (dbCol) {
-      const ref = dbCol.doc();
-      ref.set({ text, name, lifts: 0, ts: Date.now() }).catch(() => {
-        const local = { id: ref.id, text, name, lifts: 0, ts: Date.now() };
-        localPrayers.push(local);
-        render(localPrayers);
-      });
-    } else {
-      const local = {
-        id: Date.now().toString(36) + Math.random().toString(36).slice(2),
-        text, name, lifts: 0, ts: Date.now()
-      };
-      localPrayers.push(local);
-      render(localPrayers);
-    }
+    const local = { id: Date.now().toString(36) + Math.random().toString(36).slice(2), text, name, lifts: 0, ts: Date.now() };
+    localPrayers.push(local);
+    savePrayers();
+    renderPrayers(localPrayers);
   };
 
-  window.liftPrayer = async function (id, btn) {
+  window.liftPrayer = function(id, btn) {
     if (lifted[id]) return;
     lifted[id] = true;
-    saveLifted();
+    try { localStorage.setItem('ff_lifted', JSON.stringify(lifted)); } catch (_) {}
     btn.classList.add('lifted');
-    const cntEl = btn.querySelector('.lift-count');
-    cntEl.textContent = (parseInt(cntEl.textContent) || 0) + 1;
-
-    if (dbCol) {
-      try {
-        const ref  = dbCol.doc(id);
-        const snap = await ref.get();
-        if (snap.exists) {
-          const d = snap.data();
-          await ref.set({ ...d, lifts: (d.lifts || 0) + 1 });
-        }
-      } catch (_) {}
-    } else {
-      const p = localPrayers.find(x => x.id === id);
-      if (p) p.lifts = (p.lifts || 0) + 1;
-    }
+    const cnt = btn.querySelector('span:last-child');
+    cnt.textContent = (parseInt(cnt.textContent) || 0) + 1;
+    const p = localPrayers.find(x => x.id === id);
+    if (p) p.lifts = (p.lifts || 0) + 1;
+    savePrayers();
   };
 
-  async function initDB() {
-    try {
-      const db = await claude.use('db');
-      if (!db) return;
-      dbCol = db.collection('prayers');
-      const note = document.getElementById('db-note');
-      note.textContent = 'Prayers sync live across the group.';
-      note.hidden = false;
-      dbCol.orderBy('ts', 'desc').limit(100).onSnapshot(snap => {
-        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        render(list);
-      }, () => {
-        dbCol = null;
-        document.getElementById('db-note').hidden = true;
-      });
-    } catch (_) {}
+  function savePrayers() { try { localStorage.setItem('ff_prayers', JSON.stringify(localPrayers)); } catch (_) {} }
+
+  function loadPrayers() {
+    try { const stored = localStorage.getItem('ff_prayers'); if (stored) localPrayers = JSON.parse(stored); } catch (_) {}
+    renderPrayers(localPrayers);
   }
 
-  // Export prayers to JSON file
-  window.exportPrayers = function () {
-    const allPrayers = localPrayers.length > 0 ? localPrayers : [];
+  window.exportPrayers = function() {
     const meetingTime = getNextThirdFriday();
-    const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Unknown Date';
-
+    const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'Unknown';
     const data = {
-      meetingDate: dateStr,
-      prayerCount: allPrayers.length,
-      exportedAt: new Date().toISOString(),
-      prayers: allPrayers.map(p => ({
-        request: p.text,
-        name: p.name || 'Anonymous',
-        lifts: p.lifts || 0,
-        addedAt: new Date(p.ts).toLocaleString()
-      }))
+      meetingDate: dateStr, prayerCount: localPrayers.length, exportedAt: new Date().toISOString(),
+      prayers: localPrayers.map(p => ({ request: p.text, name: p.name || 'Anonymous', lifts: p.lifts || 0 }))
     };
-
     const jsonStr = JSON.stringify(data, null, 2);
     const blob = new Blob([jsonStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `fire-fellowship-prayers-${dateStr.replace(/\s+/g, '-')}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    a.href = url; a.download = `fire-fellowship-prayers-${dateStr.replace(/\s+/g, '-')}.json`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
-
-    alert(`✓ Saved ${allPrayers.length} prayers`);
+    alert(`✓ Saved ${localPrayers.length} prayers`);
   };
 
-  // Clear prayers after meeting (archive first)
-  window.clearPrayersAfterMeeting = function () {
-    if (!confirm('This will:\n1. Save current prayers to a file\n2. Clear the wall for the next meeting\n\nContinue?')) return;
-
-    // Export first
+  window.clearPrayersAfterMeeting = function() {
+    if (!confirm('Save and clear the prayer wall?')) return;
     window.exportPrayers();
-
-    // Clear local prayers
     localPrayers = [];
     try { localStorage.removeItem('ff_lifted'); } catch (_) {}
-    render([]);
-
-    // Clear from database if available
-    if (dbCol) {
-      try {
-        dbCol.where().delete().catch(() => {});
-      } catch (_) {}
-    }
+    renderPrayers([]);
   };
 
-  // Auto-clear prayers after meeting date passes
-  (function checkAndClearExpiredPrayers() {
-    try {
-      const lastClearStr = localStorage.getItem('ff_prayers_last_clear');
-      const lastClear = lastClearStr ? parseInt(lastClearStr) : 0;
-      const meetingTime = getNextThirdFriday();
-      const previousMeetingTime = new Date(meetingTime.getTime() - (86400000 * 21)); // ~3 weeks ago
-
-      if (lastClear < previousMeetingTime.getTime() && Date.now() > meetingTime.getTime()) {
-        localPrayers = [];
-        try { localStorage.removeItem('ff_lifted'); } catch (_) {}
-        localStorage.setItem('ff_prayers_last_clear', Date.now().toString());
-        render([]);
-      }
-    } catch (_) {}
-  })();
-
-  initDB();
-  render(localPrayers);
+  loadPrayers();
 })();
 
-/* ── RSVP ───────────────────────────────────────────── */
-(function () {
+/* RSVP */
+(function() {
   let rsvps = [];
 
   function renderRsvps() {
-    const el = document.getElementById('rsvp-list');
-    if (!rsvps.length) {
-      el.innerHTML = '<p style="font-family: \'Lora\', serif; font-style: italic; font-size: 0.9rem; color: var(--text-3); text-align: center; padding: 16px 0;">No confirmations yet</p>';
-      return;
-    }
+    const el = document.getElementById('attendees-list');
+    if (!rsvps.length) { el.innerHTML = ''; return; }
     const sorted = [...rsvps].sort((a, b) => (b.ts || 0) - (a.ts || 0));
     el.innerHTML = '';
     sorted.forEach(r => {
       const badge = document.createElement('div');
-      badge.style.cssText = 'background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center;';
-      badge.innerHTML = `<span style="font-family: \'Lora\', serif; font-size: 0.95rem; color: var(--text-1);">${r.name}</span><span style="font-size: 0.8rem; color: var(--text-3);">✓</span>`;
+      badge.className = 'attendee-badge';
+      badge.innerHTML = `<span>${r.name}</span><span class="attendee-checkmark">✓</span>`;
       el.appendChild(badge);
     });
   }
 
-  function saveRsvps() {
-    try { localStorage.setItem('ff_rsvps', JSON.stringify(rsvps)); } catch (_) {}
-  }
+  function saveRsvps() { try { localStorage.setItem('ff_rsvps', JSON.stringify(rsvps)); } catch (_) {} }
 
   function loadRsvps() {
-    try {
-      const stored = localStorage.getItem('ff_rsvps');
-      if (stored) rsvps = JSON.parse(stored);
-    } catch (_) {}
+    try { const stored = localStorage.getItem('ff_rsvps'); if (stored) rsvps = JSON.parse(stored); } catch (_) {}
     renderRsvps();
   }
 
-  function checkAndClearExpiredRsvps() {
-    try {
-      const lastClearStr = localStorage.getItem('ff_rsvps_last_clear');
-      const lastClear = lastClearStr ? parseInt(lastClearStr) : 0;
-      const meetingTime = getNextThirdFriday();
-      const previousMeetingTime = new Date(meetingTime.getTime() - (86400000 * 21));
-
-      if (lastClear < previousMeetingTime.getTime() && Date.now() > meetingTime.getTime()) {
-        rsvps = [];
-        saveRsvps();
-        localStorage.setItem('ff_rsvps_last_clear', Date.now().toString());
-        renderRsvps();
-        const btn = document.getElementById('rsvp-btn');
-        if (btn) {
-          btn.textContent = "I'll Be There ✓";
-          btn.disabled = false;
-          btn.classList.add('btn-ghost');
-          btn.style.cssText = '';
-        }
-      }
-    } catch (_) {}
-  }
-
-  window.rsvp = function (btn) {
+  window.rsvp = function() {
     const name = prompt('What is your name?', '');
     if (name === null) return;
     const trimName = name.trim() || 'A brother';
-
-    // Send WhatsApp message
     const meetingTime = getNextThirdFriday();
     const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'the next meeting';
     const msg = encodeURIComponent(`Hi Freddy! ${trimName} is confirming attendance for Fire & Fellowship on ${dateStr} at 7:00 PM.`);
-    const whatsappUrl = `https://wa.me/14079252589?text=${msg}`;
-    window.open(whatsappUrl, '_blank');
-
-    // Add to RSVP list
+    window.open(`https://wa.me/14079252589?text=${msg}`, '_blank');
     const existing = rsvps.find(r => r.name === trimName);
-    if (!existing) {
-      rsvps.push({ name: trimName, ts: Date.now() });
-      saveRsvps();
-      renderRsvps();
-    }
-
-    btn.textContent = 'See you there! 🔥';
-    btn.disabled = true;
-    btn.classList.remove('btn-ghost');
-    btn.style.cssText = 'background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.4);color:#C1440E;';
+    if (!existing) { rsvps.push({ name: trimName, ts: Date.now() }); saveRsvps(); renderRsvps(); }
+    const btn = document.getElementById('rsvp-btn');
+    const msg_el = document.getElementById('confirmed-msg');
+    btn.disabled = true; msg_el.classList.remove('hidden');
   };
 
-  // Initialize on page load
   loadRsvps();
-  checkAndClearExpiredRsvps();
 })();
 </script>
+
+</body>
+</html>
