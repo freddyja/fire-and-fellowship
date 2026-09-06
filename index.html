@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fire & Fellowship</title>
+  <title>Fire and Fellowship</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap">
 
@@ -178,9 +178,9 @@
       margin-bottom: 4px;
     }
 
-    .banner-title .word-1 { font-style: italic; font-size: 0.7em; color: var(--text-2); }
-    .banner-title .word-2 { color: var(--primary); display: block; }
-    .banner-title .word-3 { font-weight: 900; display: block; }
+    .banner-title .word-1 { color: var(--primary); display: block; font-weight: 900; }
+    .banner-title .word-2 { color: var(--primary); display: block; font-size: 0.5em; font-weight: 400; }
+    .banner-title .word-3 { color: var(--primary); display: block; font-weight: 900; }
 
     .banner-tagline {
       font-family: 'Lora', serif;
@@ -1097,8 +1097,8 @@
 <header class="banner">
   <div class="banner-org">A Band of Brothers</div>
   <h1 class="banner-title">
-    <span class="word-1">The</span>
-    <span class="word-2">FIRE</span>
+    <span class="word-1">FIRE</span>
+    <span class="word-2">and</span>
     <span class="word-3">FELLOWSHIP</span>
   </h1>
   <p class="banner-tagline">As iron sharpens iron, so one man sharpens another — Proverbs 27:17</p>
@@ -1191,6 +1191,9 @@
     <div class="card">
       <div style="font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; font-weight: 600;">My Reflection</div>
       <textarea class="reflection-area" id="reflection" placeholder="Write a thought, a prayer, a conviction…"></textarea>
+      <div class="prayer-actions" style="margin-top: 12px;">
+        <button class="btn btn-primary" onclick="saveReflection()">✦ Save Reflection</button>
+      </div>
     </div>
     <div class="section-divider"></div>
   </section>
@@ -1371,6 +1374,11 @@
 </footer>
 
 <script>
+/* Domain Detection for CORS Debugging */
+const currentDomain = window.location.origin;
+console.log('🔗 Fire & Fellowship running from:', currentDomain);
+console.log('📍 Add this domain to Supabase CORS: Project Settings > API > CORS Allowed Origins');
+
 /* Dark Mode */
 function toggleDarkMode() {
   const html = document.documentElement;
@@ -1521,18 +1529,21 @@ async function checkAndResetAfterMeeting() {
     // Delete all RSVPs
     await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
       method: 'DELETE',
+      mode: 'cors',
       headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
     });
 
     // Delete all prayers
     await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
       method: 'DELETE',
+      mode: 'cors',
       headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
     });
 
     // Delete all testimonials
     await fetch(`${SUPABASE_URL}/rest/v1/testimonies`, {
       method: 'DELETE',
+      mode: 'cors',
       headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
     });
 
@@ -1694,10 +1705,17 @@ document.addEventListener('DOMContentLoaded', function() {
   async function loadPrayers() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers?order=created_at.desc`, {
+        mode: 'cors',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
       });
       if (res.ok) { prayers = await res.json(); renderPrayers(prayers); }
-    } catch (e) { console.error('Load prayers error:', e); renderPrayers(prayers); }
+    } catch (e) {
+      console.error('Load prayers error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        console.error('⚠️ CORS Issue: Add your domain to Supabase CORS settings. Current domain:', currentDomain);
+      }
+      renderPrayers(prayers);
+    }
   }
 
   window.addPrayer = async function() {
@@ -1710,11 +1728,18 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
         method: 'POST',
+        mode: 'cors',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, name, lifts: 0 })
       });
       if (res.ok) { await loadPrayers(); }
-    } catch (e) { console.error('Save prayer error:', e); }
+      else { console.error('Prayer save failed:', res.status, res.statusText); }
+    } catch (e) {
+      console.error('Save prayer error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        alert('⚠️ Connection issue: CORS may need to be configured. Check console for details.');
+      }
+    }
   };
 
   window.liftPrayer = async function(id, btn) {
@@ -1725,6 +1750,7 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers?id=eq.${id}`, {
         method: 'PATCH',
+        mode: 'cors',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ lifts: newLifts })
       });
@@ -1761,6 +1787,7 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
         method: 'DELETE',
+        mode: 'cors',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
       });
       prayers = [];
@@ -1796,10 +1823,17 @@ document.addEventListener('DOMContentLoaded', function() {
   async function loadRsvps() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps?order=created_at.desc`, {
+        mode: 'cors',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
       });
       if (res.ok) { rsvps = await res.json(); renderRsvps(); }
-    } catch (e) { console.error('Load RSVPs error:', e); renderRsvps(); }
+    } catch (e) {
+      console.error('Load RSVPs error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        console.error('⚠️ CORS Issue: Add your domain to Supabase CORS settings. Current domain:', currentDomain);
+      }
+      renderRsvps();
+    }
   }
 
   window.rsvp = async function() {
@@ -1815,11 +1849,18 @@ document.addEventListener('DOMContentLoaded', function() {
       const meetDate = meetingTime ? meetingTime.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
       const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
         method: 'POST',
+        mode: 'cors',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: trimName, meeting_date: meetDate })
       });
       if (res.ok) { await loadRsvps(); }
-    } catch (e) { console.error('Save RSVP error:', e); }
+      else { console.error('RSVP save failed:', res.status, res.statusText); }
+    } catch (e) {
+      console.error('Save RSVP error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        alert('⚠️ Connection issue: CORS may need to be configured. Check console for details.');
+      }
+    }
 
     const btn = document.getElementById('rsvp-btn');
     const msg_el = document.getElementById('confirmed-msg');
@@ -1857,10 +1898,17 @@ document.addEventListener('DOMContentLoaded', function() {
   async function loadTestimonials() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/testimonies?order=created_at.desc`, {
+        mode: 'cors',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
       });
       if (res.ok) { testimonials = await res.json(); renderTestimonials(); }
-    } catch (e) { console.error('Load testimonials error:', e); renderTestimonials(); }
+    } catch (e) {
+      console.error('Load testimonials error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        console.error('⚠️ CORS Issue: Add your domain to Supabase CORS settings. Current domain:', currentDomain);
+      }
+      renderTestimonials();
+    }
   }
 
   window.showTestimonialForm = function() {
@@ -1879,11 +1927,18 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/testimonies`, {
         method: 'POST',
+        mode: 'cors',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, quote })
       });
       if (res.ok) { await loadTestimonials(); }
-    } catch (e) { console.error('Save testimonial error:', e); }
+      else { console.error('Testimonial save failed:', res.status, res.statusText); }
+    } catch (e) {
+      console.error('Save testimonial error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        alert('⚠️ Connection issue: CORS may need to be configured. Check console for details.');
+      }
+    }
 
     document.getElementById('testimonial-name').value = '';
     document.getElementById('testimonial-text').value = '';
@@ -1892,6 +1947,41 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   document.addEventListener('DOMContentLoaded', loadTestimonials);
+})();
+
+/* Reflections - Supabase */
+(function() {
+  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+
+  window.saveReflection = async function() {
+    const text = document.getElementById('reflection').value.trim();
+    if (!text) {
+      alert('Please write a reflection first.');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/reflections`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      if (res.ok) {
+        alert('✓ Reflection saved!');
+        document.getElementById('reflection').value = '';
+      } else {
+        console.error('Reflection save failed:', res.status, res.statusText);
+        alert('Error saving reflection. Check console.');
+      }
+    } catch (e) {
+      console.error('Save reflection error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        alert('⚠️ Connection issue: CORS may need to be configured. Check console for details.');
+      }
+    }
+  };
 })();
 </script>
 
