@@ -1382,7 +1382,8 @@ function toggleDarkMode() {
 
 function updateDarkModeIcon() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.getElementById('dark-mode-btn').textContent = isDark ? '☀️' : '🌙';
+  const btn = document.getElementById('dark-mode-btn');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
 }
 
 try {
@@ -1415,7 +1416,7 @@ function showSlide(n) {
   if (n >= slides.length) currentSlide = 0;
   if (n < 0) currentSlide = slides.length - 1;
   const inner = document.getElementById('carousel-inner');
-  inner.style.transform = `translateX(${-currentSlide * 100}%)`;
+  if (inner) inner.style.transform = `translateX(${-currentSlide * 100}%)`;
   document.querySelectorAll('.dot').forEach((dot, i) => {
     dot.classList.toggle('active', i === currentSlide);
   });
@@ -1426,13 +1427,15 @@ function prevSlide() { showSlide(--currentSlide); }
 
 document.addEventListener('DOMContentLoaded', function() {
   const container = document.getElementById('carousel-dots');
-  slides.forEach((_, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.onclick = () => { currentSlide = i; showSlide(currentSlide); };
-    container.appendChild(dot);
-  });
-  showSlide(0);
+  if (container && slides.length > 0) {
+    slides.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.onclick = () => { currentSlide = i; showSlide(currentSlide); };
+      container.appendChild(dot);
+    });
+    showSlide(0);
+  }
 });
 
 /* Contact Form */
@@ -1476,18 +1479,30 @@ function updateCountdown() {
   const target = getNextThirdFriday();
   if (!target) return;
   const opts = { month: 'long', day: 'numeric', year: 'numeric' };
-  document.getElementById('countdown-date').textContent = target.toLocaleDateString('en-US', opts);
-  document.getElementById('next-date-banner').textContent = target.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  document.getElementById('meeting-location').textContent = '1720 Alameda Drive · Spring Hill, FL 34609';
+  const countdownDateEl = document.getElementById('countdown-date');
+  const nextDateEl = document.getElementById('next-date-banner');
+  const locEl = document.getElementById('meeting-location');
+  if (!countdownDateEl || !nextDateEl || !locEl) return;
+  countdownDateEl.textContent = target.toLocaleDateString('en-US', opts);
+  nextDateEl.textContent = target.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  locEl.textContent = '1720 Alameda Drive · Spring Hill, FL 34609';
   const diff = target - Date.now();
-  document.getElementById('cd-days').textContent = pad(Math.max(Math.floor(diff / 86400000), 0));
-  document.getElementById('cd-hours').textContent = pad(Math.max(Math.floor((diff % 86400000) / 3600000), 0));
-  document.getElementById('cd-mins').textContent = pad(Math.max(Math.floor((diff % 3600000) / 60000), 0));
-  document.getElementById('cd-secs').textContent = pad(Math.max(Math.floor((diff % 60000) / 1000), 0));
+  const daysEl = document.getElementById('cd-days');
+  const hoursEl = document.getElementById('cd-hours');
+  const minsEl = document.getElementById('cd-mins');
+  const secsEl = document.getElementById('cd-secs');
+  if (daysEl && hoursEl && minsEl && secsEl) {
+    daysEl.textContent = pad(Math.max(Math.floor(diff / 86400000), 0));
+    hoursEl.textContent = pad(Math.max(Math.floor((diff % 86400000) / 3600000), 0));
+    minsEl.textContent = pad(Math.max(Math.floor((diff % 3600000) / 60000), 0));
+    secsEl.textContent = pad(Math.max(Math.floor((diff % 60000) / 1000), 0));
+  }
 }
 
-updateCountdown();
-setInterval(updateCountdown, 1000);
+document.addEventListener('DOMContentLoaded', function() {
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+});
 
 /* Verses */
 const verses = [
@@ -1548,8 +1563,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* Spinner */
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   const canvas = document.getElementById('spinner-canvas');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const W = 280, H = 280, cx = 140, cy = 140, R = 120;
   const items = [
@@ -1596,7 +1612,7 @@ document.addEventListener('DOMContentLoaded', function() {
       res.textContent = '"' + items[idx].q + '"'; res.classList.add('ready'); spinning = false;
     })();
   };
-})();
+});
 
 /* Prayer */
 (function() {
