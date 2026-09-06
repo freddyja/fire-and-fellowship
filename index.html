@@ -1374,10 +1374,40 @@
 </footer>
 
 <script>
-/* Domain Detection for CORS Debugging */
+/* Domain Detection & CORS Testing */
 const currentDomain = window.location.origin;
-console.log('🔗 Fire & Fellowship running from:', currentDomain);
-console.log('📍 Add this domain to Supabase CORS: Project Settings > API > CORS Allowed Origins');
+console.log('🔗 Fire and Fellowship running from:', currentDomain);
+console.log('📍 CORS Domain to add to Supabase:', currentDomain);
+
+/* Test CORS connection on page load */
+async function testCORS() {
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps?limit=0`, {
+      mode: 'cors',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+    });
+    if (res.ok) {
+      console.log('✅ CORS is working! Supabase connection successful.');
+      console.log('🎉 Your data will save and load correctly.');
+      return true;
+    } else {
+      console.warn('⚠️ Supabase responded but with error:', res.status, res.statusText);
+      return false;
+    }
+  } catch (e) {
+    console.error('❌ CORS BLOCKED - Supabase requests are being blocked');
+    console.error('Fix: Add this domain to Supabase:');
+    console.error('   Domain:', currentDomain);
+    console.error('   Path: Supabase Dashboard > Project Settings > API > CORS Allowed Origins');
+    console.error('   Then reload this page.');
+    return false;
+  }
+}
+
+window.addEventListener('load', testCORS);
 
 /* Dark Mode */
 function toggleDarkMode() {
@@ -1509,7 +1539,7 @@ function updateCountdown() {
 
 /* Auto-Reset after Meeting */
 async function checkAndResetAfterMeeting() {
-  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
 
   const now = new Date();
@@ -1675,7 +1705,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Prayer - Supabase */
 (function() {
-  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
   let prayers = [];
 
@@ -1800,7 +1830,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* RSVP - Supabase */
 (function() {
-  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
   let rsvps = [];
 
@@ -1872,7 +1902,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Testimonials - Supabase */
 (function() {
-  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
   let testimonials = [];
 
@@ -1951,7 +1981,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Reflections - Supabase */
 (function() {
-  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
 
   window.saveReflection = async function() {
