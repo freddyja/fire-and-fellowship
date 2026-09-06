@@ -1187,6 +1187,8 @@
         <button class="btn btn-secondary" onclick="filterTheme('brotherhood')">Brotherhood</button>
         <button class="btn btn-secondary" onclick="filterTheme('leadership')">Leadership</button>
         <button class="btn btn-secondary" onclick="filterTheme('wisdom')">Wisdom</button>
+        <button class="btn btn-secondary" onclick="filterTheme('faith')">Faith</button>
+        <button class="btn btn-secondary" onclick="filterTheme('character')">Character</button>
       </div>
     </div>
 
@@ -1287,17 +1289,23 @@
   <section id="testimonials">
     <div class="section-label">Stories</div>
     <h2>Testimonials</h2>
-    <div class="card" style="padding: 0;">
-      <div style="padding: 32px;">
-        <div class="testimonial-card">
+    <div class="card" style="margin-bottom: 24px;">
+      <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+        <input type="text" id="testimonial-name" placeholder="Your name (optional)" class="prayer-input" style="flex: 1; margin-bottom: 0;">
+        <button class="btn btn-primary" onclick="showTestimonialForm()" style="flex-shrink: 0;">✦ Add Story</button>
+      </div>
+      <textarea id="testimonial-text" placeholder="Share your story about this group…" class="prayer-input" style="display: none; margin-bottom: 12px;"></textarea>
+      <button class="btn btn-secondary" id="testimonial-submit-btn" onclick="addTestimonial()" style="display: none; margin-bottom: 0;">Submit Story</button>
+      <div id="testimonial-list" style="padding-top: 20px; border-top: 1px solid rgba(139, 123, 61, 0.15);">
+        <div class="testimonial-card" data-original="true">
           <p class="testimonial-quote">"This group changed how I see brotherhood. I finally have men I can be real with."</p>
           <p class="testimonial-author">— James M.</p>
         </div>
-        <div class="testimonial-card">
+        <div class="testimonial-card" data-original="true">
           <p class="testimonial-quote">"Coming here every third Friday is the best commitment I've made to myself."</p>
           <p class="testimonial-author">— Marcus T.</p>
         </div>
-        <div class="testimonial-card">
+        <div class="testimonial-card" data-original="true">
           <p class="testimonial-quote">"As iron sharpens iron — that's not just a verse here, it's lived out every meeting."</p>
           <p class="testimonial-author">— David R.</p>
         </div>
@@ -1492,7 +1500,33 @@ const verses = [
   { ref: 'Proverbs 13:20', text: '"Walk with the wise and become wise."', themes: ['wisdom', 'brotherhood'] },
   { ref: 'Joshua 1:9', text: '"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you."', themes: ['courage', 'leadership'] },
   { ref: '1 Peter 4:10', text: '"Each of you should use whatever gift you have received to serve others."', themes: ['leadership'] },
-  { ref: '2 Timothy 2:2', text: '"Entrust to reliable people who will also be qualified to teach others."', themes: ['leadership'] }
+  { ref: '2 Timothy 2:2', text: '"Entrust to reliable people who will also be qualified to teach others."', themes: ['leadership'] },
+  { ref: 'Proverbs 17:17', text: '"A friend loves at all times, and a brother is born for a time of adversity."', themes: ['brotherhood', 'faith'] },
+  { ref: '1 Thessalonians 5:11', text: '"Therefore encourage one another and build each other up, just as in fact you are doing."', themes: ['brotherhood', 'encouragement'] },
+  { ref: 'Proverbs 11:14', text: '"For lack of guidance a nation falls, but victory is sure with many advisers."', themes: ['wisdom', 'leadership'] },
+  { ref: 'Psalm 27:10', text: '"Though my father and mother forsake me, the Lord will receive me."', themes: ['faith', 'grace'] },
+  { ref: 'Romans 12:10', text: '"Be devoted to one another in love. Honor one another above yourselves."', themes: ['brotherhood', 'character'] },
+  { ref: 'Proverbs 27:12', text: '"The prudent see danger and take refuge, but the simple keep going and pay the penalty."', themes: ['wisdom'] },
+  { ref: '1 John 4:7', text: '"Dear friends, let us love one another, for love comes from God."', themes: ['faith', 'brotherhood'] },
+  { ref: 'Deuteronomy 31:6', text: '"Be strong and courageous. Do not be afraid or terrified because of them, for the Lord your God goes with you."', themes: ['courage', 'faith'] },
+  { ref: 'Proverbs 22:29', text: '"Do you see someone skilled in their work? They will serve before kings."', themes: ['character', 'leadership'] },
+  { ref: 'Philippians 2:3–4', text: '"Do nothing out of selfish ambition or vain conceit. Rather, in humility value others above yourselves."', themes: ['character', 'brotherhood'] },
+  { ref: '2 Timothy 1:7', text: '"For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline."', themes: ['courage', 'faith'] },
+  { ref: 'Proverbs 15:22', text: '"Plans fail for lack of counsel, but with many advisers they succeed."', themes: ['wisdom', 'brotherhood'] },
+  { ref: 'James 1:22', text: '"Do not merely listen to the word. Do what it says."', themes: ['character', 'faith'] },
+  { ref: 'Colossians 3:12–13', text: '"Therefore, as God\'s chosen people, clothe yourselves with compassion, kindness, humility, gentleness and patience."', themes: ['character', 'grace'] },
+  { ref: '1 Corinthians 13:4–5', text: '"Love is patient, love is kind. It does not envy, it does not boast, it is not proud."', themes: ['grace', 'character'] },
+  { ref: 'Proverbs 4:23', text: '"Above all else, guard your heart, for everything you do flows from it."', themes: ['wisdom', 'character'] },
+  { ref: 'Ephesians 6:10', text: '"Finally, be strong in the Lord and in his mighty power."', themes: ['faith', 'courage'] },
+  { ref: 'Proverbs 10:17', text: '"Whoever heeds discipline shows the way to life, but whoever ignores correction leads others astray."', themes: ['wisdom', 'leadership'] },
+  { ref: 'Mark 12:30–31', text: '"Love the Lord your God with all your heart. Love your neighbor as yourself."', themes: ['faith', 'brotherhood'] },
+  { ref: 'Proverbs 19:20', text: '"Listen to advice and accept instruction, and in the end you will be wise."', themes: ['wisdom'] },
+  { ref: '1 Peter 3:7', text: '"Husbands, in the same way be considerate as you live with your wives."', themes: ['leadership', 'grace'] },
+  { ref: 'Galatians 5:22–23', text: '"The fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness, gentleness and self-control."', themes: ['character', 'grace'] },
+  { ref: 'Proverbs 28:13', text: '"Whoever conceals their sins does not prosper, but the one who confesses and renounces them finds mercy."', themes: ['character', 'faith'] },
+  { ref: 'Hebrews 10:24–25', text: '"And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together."', themes: ['brotherhood', 'encouragement'] },
+  { ref: 'Proverbs 21:5', text: '"The plans of the diligent lead to profit, but hasty action leads to loss."', themes: ['wisdom', 'character'] },
+  { ref: '1 Corinthians 15:57', text: '"But thanks be to God, who gives us the victory through our Lord Jesus Christ."', themes: ['faith', 'courage'] }
 ];
 
 function drawVerse() {
@@ -1696,6 +1730,62 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   loadRsvps();
+})();
+
+/* Testimonials */
+(function() {
+  let testimonials = [];
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  function renderTestimonials() {
+    const list = document.getElementById('testimonial-list');
+    const existingCards = list.querySelectorAll('.testimonial-card');
+    existingCards.forEach(card => {
+      if (!card.getAttribute('data-original')) {
+        card.remove();
+      }
+    });
+
+    testimonials.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'testimonial-card';
+      card.innerHTML = `<p class="testimonial-quote">"${esc(t.quote)}"</p><p class="testimonial-author">— ${esc(t.name || 'Anonymous')}</p>`;
+      list.appendChild(card);
+    });
+  }
+
+  function saveTestimonials() { try { localStorage.setItem('ff_testimonials', JSON.stringify(testimonials)); } catch (_) {} }
+
+  function loadTestimonials() {
+    try { const stored = localStorage.getItem('ff_testimonials'); if (stored) testimonials = JSON.parse(stored); } catch (_) {}
+    renderTestimonials();
+  }
+
+  window.showTestimonialForm = function() {
+    const textarea = document.getElementById('testimonial-text');
+    const btn = document.getElementById('testimonial-submit-btn');
+    textarea.style.display = 'block';
+    btn.style.display = 'block';
+    textarea.focus();
+  };
+
+  window.addTestimonial = function() {
+    const name = document.getElementById('testimonial-name').value.trim() || 'Anonymous';
+    const quote = document.getElementById('testimonial-text').value.trim();
+    if (!quote) return;
+
+    testimonials.push({ name, quote });
+    saveTestimonials();
+    renderTestimonials();
+
+    document.getElementById('testimonial-name').value = '';
+    document.getElementById('testimonial-text').value = '';
+    document.getElementById('testimonial-text').style.display = 'none';
+    document.getElementById('testimonial-submit-btn').style.display = 'none';
+  };
+
+  loadTestimonials();
 })();
 </script>
 
