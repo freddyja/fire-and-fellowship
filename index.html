@@ -1519,13 +1519,13 @@ async function checkAndResetAfterMeeting() {
   // Reset has already happened for this meeting time
   try {
     // Delete all RSVPs
-    await fetch(`${SUPABASE_URL}/rest/v1/RSVPs`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
     });
 
     // Delete all prayers
-    await fetch(`${SUPABASE_URL}/rest/v1/prayer`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
     });
@@ -1693,7 +1693,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   async function loadPrayers() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayer?order=created_at.desc`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers?order=created_at.desc`, {
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
       });
       if (res.ok) { prayers = await res.json(); renderPrayers(prayers); }
@@ -1708,7 +1708,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('prayer-name').value = '';
 
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayer`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, name, lifts: 0 })
@@ -1723,7 +1723,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const newLifts = (prayer.lifts || 0) + 1;
 
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayer?id=eq.${id}`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers?id=eq.${id}`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ lifts: newLifts })
@@ -1759,7 +1759,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.exportPrayers();
 
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/prayer`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
       });
@@ -1795,7 +1795,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   async function loadRsvps() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/RSVPs?order=created_at.desc`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps?order=created_at.desc`, {
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
       });
       if (res.ok) { rsvps = await res.json(); renderRsvps(); }
@@ -1813,7 +1813,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     try {
       const meetDate = meetingTime ? meetingTime.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/RSVPs`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: trimName, meeting_date: meetDate })
