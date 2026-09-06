@@ -1499,9 +1499,57 @@ function updateCountdown() {
   }
 }
 
+/* Auto-Reset after Meeting */
+async function checkAndResetAfterMeeting() {
+  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+
+  const now = new Date();
+  const meetingTime = getNextThirdFriday();
+
+  // If the next meeting time is in the future, no need to reset
+  if (meetingTime > now) return;
+
+  // Check if we've already reset for this meeting
+  try {
+    const lastReset = localStorage.getItem('ff_last_reset');
+    if (lastReset === meetingTime.toISOString().split('T')[0]) return;
+  } catch (_) {}
+
+  // Reset has already happened for this meeting time
+  try {
+    // Delete all RSVPs
+    await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+    });
+
+    // Delete all prayers
+    await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+    });
+
+    // Delete all testimonials
+    await fetch(`${SUPABASE_URL}/rest/v1/testimonials`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+    });
+
+    // Mark reset as done
+    localStorage.setItem('ff_last_reset', meetingTime.toISOString().split('T')[0]);
+
+    console.log('Auto-reset: All meeting data cleared after 7 PM');
+  } catch (e) {
+    console.error('Auto-reset error:', e);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   updateCountdown();
   setInterval(updateCountdown, 1000);
+  checkAndResetAfterMeeting();
+  setInterval(checkAndResetAfterMeeting, 60000); // Check every minute
 });
 
 /* Verses */
@@ -1614,15 +1662,16 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 });
 
-/* Prayer */
+/* Prayer - Supabase */
 (function() {
-  let localPrayers = [], lifted = {};
-  try { lifted = JSON.parse(localStorage.getItem('ff_lifted') || '{}'); } catch (_) {}
+  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+  let prayers = [];
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function ago(ts) {
     if (!ts) return 'just now';
-    const d = Date.now() - ts;
+    const d = Date.now() - new Date(ts).getTime();
     if (d < 60000) return 'just now';
     if (d < 3600000) return Math.floor(d / 60000) + 'm ago';
     if (d < 86400000) return Math.floor(d / 3600000) + 'h ago';
@@ -1632,54 +1681,68 @@ document.addEventListener('DOMContentLoaded', function() {
   function renderPrayers(list) {
     const el = document.getElementById('prayer-list');
     if (!list.length) { el.innerHTML = '<p class="prayer-empty">No requests yet — be the first to share one.</p>'; return; }
-    const sorted = [...list].sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    const sorted = [...list].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     el.innerHTML = '';
     sorted.forEach(p => {
       const card = document.createElement('div');
       card.className = 'prayer-card';
-      const isLifted = !!lifted[p.id];
-      card.innerHTML = `<div class="prayer-body"><p class="prayer-text">${esc(p.text)}</p><p class="prayer-meta">${esc(p.name || 'Anonymous')} · ${ago(p.ts)}</p></div><button class="lift-btn${isLifted ? ' lifted' : ''}" onclick="liftPrayer('${p.id}', this)"><span class="lift-icon">🔥</span><span>${p.lifts || 0}</span></button>`;
+      card.innerHTML = `<div class="prayer-body"><p class="prayer-text">${esc(p.text)}</p><p class="prayer-meta">${esc(p.name || 'Anonymous')} · ${ago(p.created_at)}</p></div><button class="lift-btn" onclick="liftPrayer(${p.id}, this)"><span class="lift-icon">🔥</span><span>${p.lifts || 0}</span></button>`;
       el.appendChild(card);
     });
   }
 
-  window.addPrayer = function() {
+  async function loadPrayers() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers?order=created_at.desc`, {
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+      });
+      if (res.ok) { prayers = await res.json(); renderPrayers(prayers); }
+    } catch (e) { console.error('Load prayers error:', e); renderPrayers(prayers); }
+  }
+
+  window.addPrayer = async function() {
     const text = document.getElementById('prayer-text').value.trim();
     const name = document.getElementById('prayer-name').value.trim() || 'Anonymous';
     if (!text) return;
     document.getElementById('prayer-text').value = '';
     document.getElementById('prayer-name').value = '';
-    const local = { id: Date.now().toString(36) + Math.random().toString(36).slice(2), text, name, lifts: 0, ts: Date.now() };
-    localPrayers.push(local);
-    savePrayers();
-    renderPrayers(localPrayers);
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, name, lifts: 0 })
+      });
+      if (res.ok) { await loadPrayers(); }
+    } catch (e) { console.error('Save prayer error:', e); }
   };
 
-  window.liftPrayer = function(id, btn) {
-    if (lifted[id]) return;
-    lifted[id] = true;
-    try { localStorage.setItem('ff_lifted', JSON.stringify(lifted)); } catch (_) {}
-    btn.classList.add('lifted');
-    const cnt = btn.querySelector('span:last-child');
-    cnt.textContent = (parseInt(cnt.textContent) || 0) + 1;
-    const p = localPrayers.find(x => x.id === id);
-    if (p) p.lifts = (p.lifts || 0) + 1;
-    savePrayers();
+  window.liftPrayer = async function(id, btn) {
+    const prayer = prayers.find(p => p.id === id);
+    if (!prayer) return;
+    const newLifts = (prayer.lifts || 0) + 1;
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lifts: newLifts })
+      });
+      if (res.ok) {
+        prayer.lifts = newLifts;
+        btn.classList.add('lifted');
+        const cnt = btn.querySelector('span:last-child');
+        cnt.textContent = newLifts;
+      }
+    } catch (e) { console.error('Lift prayer error:', e); }
   };
-
-  function savePrayers() { try { localStorage.setItem('ff_prayers', JSON.stringify(localPrayers)); } catch (_) {} }
-
-  function loadPrayers() {
-    try { const stored = localStorage.getItem('ff_prayers'); if (stored) localPrayers = JSON.parse(stored); } catch (_) {}
-    renderPrayers(localPrayers);
-  }
 
   window.exportPrayers = function() {
     const meetingTime = getNextThirdFriday();
     const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'Unknown';
     const data = {
-      meetingDate: dateStr, prayerCount: localPrayers.length, exportedAt: new Date().toISOString(),
-      prayers: localPrayers.map(p => ({ request: p.text, name: p.name || 'Anonymous', lifts: p.lifts || 0 }))
+      meetingDate: dateStr, prayerCount: prayers.length, exportedAt: new Date().toISOString(),
+      prayers: prayers.map(p => ({ request: p.text, name: p.name || 'Anonymous', lifts: p.lifts || 0 }))
     };
     const jsonStr = JSON.stringify(data, null, 2);
     const blob = new Blob([jsonStr], { type: 'application/json' });
@@ -1688,22 +1751,30 @@ document.addEventListener('DOMContentLoaded', function() {
     a.href = url; a.download = `fire-fellowship-prayers-${dateStr.replace(/\s+/g, '-')}.json`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    alert(`✓ Saved ${localPrayers.length} prayers`);
+    alert(`✓ Saved ${prayers.length} prayers`);
   };
 
-  window.clearPrayersAfterMeeting = function() {
+  window.clearPrayersAfterMeeting = async function() {
     if (!confirm('Save and clear the prayer wall?')) return;
     window.exportPrayers();
-    localPrayers = [];
-    try { localStorage.removeItem('ff_lifted'); } catch (_) {}
-    renderPrayers([]);
+
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+      });
+      prayers = [];
+      renderPrayers([]);
+    } catch (e) { console.error('Clear prayers error:', e); }
   };
 
-  loadPrayers();
+  document.addEventListener('DOMContentLoaded', loadPrayers);
 })();
 
-/* RSVP */
+/* RSVP - Supabase */
 (function() {
+  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
   let rsvps = [];
 
   function renderRsvps() {
@@ -1713,7 +1784,7 @@ document.addEventListener('DOMContentLoaded', function() {
       el.innerHTML = '<div style="color: var(--text-3); font-size: 0.9rem; text-align: center; padding: 16px;">No one has confirmed yet — be the first</div>';
       return;
     }
-    const sorted = [...rsvps].sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    const sorted = [...rsvps].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     sorted.forEach(r => {
       const badge = document.createElement('div');
       badge.className = 'attendee-badge';
@@ -1722,14 +1793,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function saveRsvps() { try { localStorage.setItem('ff_rsvps', JSON.stringify(rsvps)); } catch (_) {} }
-
-  function loadRsvps() {
-    try { const stored = localStorage.getItem('ff_rsvps'); if (stored) rsvps = JSON.parse(stored); } catch (_) {}
-    renderRsvps();
+  async function loadRsvps() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps?order=created_at.desc`, {
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+      });
+      if (res.ok) { rsvps = await res.json(); renderRsvps(); }
+    } catch (e) { console.error('Load RSVPs error:', e); renderRsvps(); }
   }
 
-  window.rsvp = function() {
+  window.rsvp = async function() {
     const name = prompt('What is your name?', '');
     if (name === null) return;
     const trimName = name.trim() || 'A brother';
@@ -1737,18 +1810,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'the next meeting';
     const msg = encodeURIComponent(`Hi Freddy! ${trimName} is confirming attendance for Fire & Fellowship on ${dateStr} at 7:00 PM.`);
     window.open(`https://wa.me/14079252589?text=${msg}`, '_blank');
-    const existing = rsvps.find(r => r.name === trimName);
-    if (!existing) { rsvps.push({ name: trimName, ts: Date.now() }); saveRsvps(); renderRsvps(); }
+
+    try {
+      const meetDate = meetingTime ? meetingTime.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimName, meeting_date: meetDate })
+      });
+      if (res.ok) { await loadRsvps(); }
+    } catch (e) { console.error('Save RSVP error:', e); }
+
     const btn = document.getElementById('rsvp-btn');
     const msg_el = document.getElementById('confirmed-msg');
     btn.disabled = true; msg_el.classList.remove('hidden');
   };
 
-  loadRsvps();
+  document.addEventListener('DOMContentLoaded', loadRsvps);
 })();
 
-/* Testimonials */
+/* Testimonials - Supabase */
 (function() {
+  const SUPABASE_URL = 'https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
   let testimonials = [];
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -1770,11 +1854,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function saveTestimonials() { try { localStorage.setItem('ff_testimonials', JSON.stringify(testimonials)); } catch (_) {} }
-
-  function loadTestimonials() {
-    try { const stored = localStorage.getItem('ff_testimonials'); if (stored) testimonials = JSON.parse(stored); } catch (_) {}
-    renderTestimonials();
+  async function loadTestimonials() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/testimonials?order=created_at.desc`, {
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+      });
+      if (res.ok) { testimonials = await res.json(); renderTestimonials(); }
+    } catch (e) { console.error('Load testimonials error:', e); renderTestimonials(); }
   }
 
   window.showTestimonialForm = function() {
@@ -1785,14 +1871,19 @@ document.addEventListener('DOMContentLoaded', function() {
     textarea.focus();
   };
 
-  window.addTestimonial = function() {
+  window.addTestimonial = async function() {
     const name = document.getElementById('testimonial-name').value.trim() || 'Anonymous';
     const quote = document.getElementById('testimonial-text').value.trim();
     if (!quote) return;
 
-    testimonials.push({ name, quote });
-    saveTestimonials();
-    renderTestimonials();
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/testimonials`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, quote })
+      });
+      if (res.ok) { await loadTestimonials(); }
+    } catch (e) { console.error('Save testimonial error:', e); }
 
     document.getElementById('testimonial-name').value = '';
     document.getElementById('testimonial-text').value = '';
@@ -1800,7 +1891,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('testimonial-submit-btn').style.display = 'none';
   };
 
-  loadTestimonials();
+  document.addEventListener('DOMContentLoaded', loadTestimonials);
 })();
 </script>
 
