@@ -32,9 +32,9 @@
     .header-top {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
+      padding: 16px 24px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       gap: 16px;
     }
@@ -59,29 +59,26 @@
     }
 
     .lang-btn {
-      padding: 6px 12px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      border-radius: 4px;
+      padding: 10px 20px;
+      border: none;
+      background: var(--accent);
+      border-radius: 20px;
       cursor: pointer;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
+      letter-spacing: 0.02em;
       transition: all 0.2s;
-      color: var(--text-1);
+      color: white;
     }
 
     .lang-btn:hover {
       background: var(--primary);
-      color: white;
-      border-color: var(--primary);
+      transform: translateY(-2px);
     }
 
     .lang-btn.active {
       background: var(--primary);
       color: white;
-      border-color: var(--primary);
     }
 
     .icon-btn {
@@ -1106,9 +1103,9 @@
 <!-- Header with Language Selector -->
 <div class="header-top">
   <div class="lang-selector">
-    <button class="lang-btn active" id="lang-en" onclick="changeLanguage('en')">🇺🇸 EN</button>
-    <button class="lang-btn" id="lang-es" onclick="changeLanguage('es')">🇪🇸 ES</button>
-    <button class="lang-btn" id="lang-pt" onclick="changeLanguage('pt')">🇵🇹 PT</button>
+    <button class="lang-btn active" id="lang-en" onclick="changeLanguage('en')">🇺🇸 English</button>
+    <button class="lang-btn" id="lang-es" onclick="changeLanguage('es')">🇪🇸 Español</button>
+    <button class="lang-btn" id="lang-pt" onclick="changeLanguage('pt')">🇵🇹 Português</button>
   </div>
 </div>
 
