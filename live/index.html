@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live Captions · Fire and Fellowship</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <a href="/">Fire and Fellowship</a>
+      <nav>
+        <a href="/handout.html">Handout</a>
+        <a href="/live/phone.html">Phone</a>
+        <a href="/live/tv.html">TV</a>
+      </nav>
+    </header>
+    <section class="hero">
+      <div class="brand-kicker">Live captions</div>
+      <h1>Same room.<span>Two screens.</span></h1>
+      <p>Phone is the mic and remote. TV is the big display. Join with one short code — no screen-share required.</p>
+    </section>
+    <div class="panel">
+      <label class="field" for="room">Room code</label>
+      <input id="room" type="text" maxlength="8" placeholder="e.g. K7M2" autocomplete="off" />
+      <div class="row" style="margin-top:14px">
+        <button class="btn btn-primary" id="create" type="button">Create a room</button>
+        <span class="muted" id="created"></span>
+      </div>
+    </div>
+    <div class="cards">
+      <a class="card" id="phone-link" href="/live/phone.html">
+        <div class="brand-kicker">This device</div>
+        <h2>Phone control</h2>
+        <p>Start the mic, pick source language, and choose what the TV shows.</p>
+      </a>
+      <a class="card" id="tv-link" href="/live/tv.html">
+        <div class="brand-kicker">The living-room screen</div>
+        <h2>TV display</h2>
+        <p>Join the same code. No microphone. Captions stay large and high-contrast.</p>
+      </a>
+    </div>
+    <p class="note">Tip: put the phone near the person speaking. Chrome on the phone is the most reliable for speech-to-text. If the mic is blocked, you can still type a line on the phone page.</p>
+  </div>
+  <script type="module" src="/src/liveHub.ts"></script>
+</body>
+</html>

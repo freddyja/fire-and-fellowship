@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Phone · Live Captions · Fire and Fellowship</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <a href="/live/">Live Captions</a>
+      <nav>
+        <a href="/handout.html">Handout</a>
+        <a href="/live/tv.html" id="tv-nav">Open TV</a>
+      </nav>
+    </header>
+
+    <div class="panel">
+      <div class="brand-kicker">Room</div>
+      <div class="room-code" id="room-code">····</div>
+      <div class="row">
+        <button class="btn btn-ghost" id="copy-code" type="button">Copy code</button>
+        <button class="btn btn-ghost" id="copy-tv" type="button">Copy TV link</button>
+        <span class="muted" id="peers">Connecting…</span>
+      </div>
+    </div>
+
+    <div id="banner" class="status info">Checking this browser and the caption server…</div>
+
+    <div class="panel">
+      <label class="field">Spoken language (what the mic hears)</label>
+      <div class="row" id="source-langs"></div>
+    </div>
+
+    <div class="panel">
+      <label class="field">Languages on the TV</label>
+      <div class="row" id="tv-langs"></div>
+      <label class="field" style="margin-top:18px">TV layout</label>
+      <div class="row">
+        <button class="lang-btn" type="button" data-layout="single" aria-pressed="false">One language, full screen</button>
+        <button class="lang-btn" type="button" data-layout="columns" aria-pressed="true">Columns (2 or 3)</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <button class="btn btn-primary mic" id="mic" type="button" data-on="false">Start microphone</button>
+      <div class="preview muted" id="preview">Captions will appear here and on the TV at the same time.</div>
+      <label class="field" for="typed">Type a line if the mic is unavailable</label>
+      <textarea id="typed" rows="2" placeholder="Type a sentence, then send."></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn btn-primary" id="send-typed" type="button">Send to TV</button>
+        <button class="btn btn-ghost" id="send-sample" type="button">Send sample verse</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/phone.ts"></script>
+</body>
+</html>

@@ -1,0 +1,2473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fire and Fellowship</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap">
+
+  <style>
+    :root {
+      --primary: #8B7B3D;
+      --accent: #C9A961;
+      --bg: #e8e6e1;
+      --surface: #f5f3f0;
+      --text-1: #1a1a1a;
+      --text-2: #666666;
+      --text-3: #999999;
+      --border: #d0ccc5;
+      --success: #22c55e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--text-1);
+      background-color: var(--bg);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header-top {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .lang-btn {
+      padding: 10px 20px;
+      border: none;
+      background: var(--accent);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      color: white;
+    }
+
+    .lang-btn:hover {
+      background: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .lang-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+      color: var(--text-1);
+    }
+
+    .icon-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* Nav Drawer */
+    .nav-toggle { display: none; }
+    @media (max-width: 768px) {
+      .nav-toggle { display: flex; }
+    }
+
+    .nav-drawer {
+      position: fixed;
+      top: 0;
+      left: -300px;
+      width: 300px;
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      z-index: 1000;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .nav-drawer.open { left: 0; }
+
+    .nav-drawer-header {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-drawer-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-1);
+    }
+
+    .nav-drawer-content { padding: 20px 16px; }
+    .nav-drawer-section { margin-bottom: 24px; }
+    .nav-drawer-section-title {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-3);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .nav-drawer-link {
+      display: block;
+      padding: 10px 12px;
+      color: var(--text-1);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+
+    .nav-drawer-link:hover {
+      background: rgba(139, 123, 61, 0.1);
+      color: var(--primary);
+      padding-left: 16px;
+    }
+
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .nav-overlay.open { display: block; }
+
+    /* Banner */
+    .banner {
+      background: var(--bg);
+      color: var(--text-1);
+      padding: 50px 24px 40px;
+      text-align: center;
+      border-bottom: 2px solid rgba(139, 123, 61, 0.15);
+    }
+
+    .banner-org {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 24px;
+    }
+
+    .banner-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .banner-title .word-1 { color: var(--primary); display: block; font-weight: 900; }
+    .banner-title .word-2 { color: var(--primary); display: block; font-size: 0.5em; font-weight: 400; }
+    .banner-title .word-3 { color: var(--primary); display: block; font-weight: 900; }
+
+    .banner-tagline {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      color: var(--text-2);
+      margin: 20px auto;
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    .banner-schedule {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .banner-date { color: var(--primary); font-weight: 600; }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-1);
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .social-link:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    /* Countdown */
+    .countdown-section {
+      background: var(--surface);
+      padding: 50px 24px;
+      text-align: center;
+      margin: 40px 24px;
+      border: 1px solid var(--border);
+      border-left: 6px solid #6B5B2D;
+      border-radius: 4px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6), inset -5px -5px 12px rgba(0,0,0,0.45);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .countdown-section { grid-template-columns: 1fr; gap: 30px; margin: 40px 0; }
+    }
+
+    .countdown-left, .countdown-right { text-align: left; }
+    @media (max-width: 900px) {
+      .countdown-left, .countdown-right { text-align: center; }
+    }
+
+    .countdown-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .countdown-date {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--text-1);
+      margin-bottom: 20px;
+    }
+
+    .countdown-timer {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px;
+      border-radius: 4px;
+      background: rgba(139, 123, 61, 0.05);
+      min-width: 70px;
+      transition: all 0.2s;
+    }
+
+    .countdown-unit:hover { background: rgba(139, 123, 61, 0.12); }
+
+    .countdown-num {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .countdown-unit-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .location-info { font-size: 0.85rem; color: var(--text-1); }
+    .location-info .label {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 4px;
+      font-weight: 600;
+      display: block;
+    }
+
+    /* Main */
+    main { max-width: 900px; margin: 0 auto; padding: 50px 24px; }
+    section { margin-bottom: 50px; }
+
+    .section-divider {
+      height: 2px;
+      background: rgba(139, 123, 61, 0.15);
+      margin: 0 0 50px 0;
+      border-radius: 2px;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    section h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 900;
+      margin-bottom: 28px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 6px solid #6B5B2D;
+      border-radius: 4px;
+      padding: 32px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6), inset -5px -5px 12px rgba(0,0,0,0.45);
+      transition: all 0.3s ease;
+      margin-bottom: 24px;
+    }
+
+    .card:hover {
+      box-shadow: 0 12px 28px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6), inset -5px -5px 15px rgba(0,0,0,0.55);
+      transform: translateY(-2px);
+    }
+
+    .card-small {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 6px solid #6B5B2D;
+      border-radius: 4px;
+      padding: 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5), inset -5px -5px 12px rgba(0,0,0,0.40);
+      transition: all 0.2s ease;
+    }
+
+    .card-small:hover {
+      transform: translateX(4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.5), inset -5px -5px 15px rgba(0,0,0,0.50);
+    }
+
+    /* Attendance */
+    .attendance-when {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .attendance-question {
+      font-family: 'Cinzel', serif;
+      font-size: 1.9rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .attendance-subtext {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--text-2);
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.85;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(139, 123, 61, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text-1);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(139, 123, 61, 0.05);
+    }
+
+    .confirmed-msg {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-top: 16px;
+      animation: slideInUp 0.3s ease;
+    }
+
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .attendees-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .attendee-badge {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid #6B5B2D;
+      border-radius: 4px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.4), inset -4px -4px 8px rgba(0,0,0,0.40);
+      transition: all 0.2s;
+    }
+
+    .attendee-badge:hover { transform: translateX(4px); }
+    .attendee-checkmark { color: var(--success); font-weight: bold; }
+
+    /* Scripture */
+    .scripture-ref {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .scripture-text {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      line-height: 1.85;
+      color: var(--text-1);
+      margin-bottom: 16px;
+    }
+
+    .scripture-attr {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      margin-bottom: 16px;
+    }
+
+    .scripture-desc {
+      font-size: 0.85rem;
+      color: var(--text-3);
+      margin-top: 14px;
+      font-style: italic;
+    }
+
+    .scripture-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .scripture-actions .btn {
+      flex: 1;
+      justify-content: center;
+      min-width: 140px;
+    }
+
+    /* Filters */
+    .filters-group { margin: 28px 0; }
+    .filters-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filters .btn {
+      padding: 8px 16px;
+      font-size: 0.75rem;
+    }
+
+    /* Reflection */
+    textarea.reflection-area {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      background: var(--bg);
+      color: var(--text-1);
+      resize: vertical;
+      min-height: 100px;
+      transition: all 0.2s;
+    }
+
+    textarea.reflection-area::placeholder { color: var(--text-3); }
+    textarea.reflection-area:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139, 123, 61, 0.1); }
+
+    /* Challenge */
+    .challenge-text {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-1);
+    }
+
+    /* Questions */
+    .questions-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .question-item {
+      display: flex;
+      gap: 18px;
+    }
+
+    .question-num {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+      min-width: 32px;
+      flex-shrink: 0;
+    }
+
+    .question-text {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-1);
+    }
+
+    /* Gallery */
+    .gallery-container { margin-bottom: 24px; }
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      background: var(--bg);
+    }
+
+    .carousel-inner {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-item {
+      min-width: 100%;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(139, 123, 61, 0.1), rgba(201, 169, 97, 0.1));
+      font-size: 2rem;
+    }
+
+    .carousel-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .carousel-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+    }
+
+    .carousel-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dot.active {
+      background: var(--primary);
+      transform: scale(1.3);
+    }
+
+    /* Spinner */
+    .spinner-desc {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      margin-bottom: 24px;
+    }
+
+    .spinner-canvas {
+      margin: 28px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    #spinner-canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .spinner-result {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--text-3);
+      min-height: 28px;
+      margin-bottom: 24px;
+    }
+
+    .spinner-result.ready {
+      font-style: normal;
+      font-weight: 600;
+      color: var(--text-1);
+      animation: slideInUp 0.3s ease;
+    }
+
+    /* Prayer */
+    .prayer-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .prayer-input {
+      flex: 1;
+      min-width: 150px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      background: var(--bg);
+      color: var(--text-1);
+      transition: all 0.2s;
+    }
+
+    .prayer-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(139, 123, 61, 0.1);
+    }
+
+    .prayer-input::placeholder { color: var(--text-3); }
+
+    textarea.prayer-input {
+      font-family: 'Lora', serif;
+      resize: vertical;
+      min-height: 80px;
+      flex-basis: 100%;
+    }
+
+    .prayer-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .prayer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .prayer-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 6px solid #6B5B2D;
+      border-radius: 4px;
+      padding: 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.4), inset -5px -5px 12px rgba(0,0,0,0.40);
+      transition: all 0.2s;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .prayer-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4), inset -5px -5px 12px rgba(0,0,0,0.50);
+    }
+
+    .prayer-body { flex: 1; }
+    .prayer-text {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+
+    .prayer-meta {
+      font-size: 0.75rem;
+      color: var(--text-3);
+    }
+
+    .lift-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text-3);
+      font-size: 0.7rem;
+      font-weight: 600;
+      min-width: 44px;
+      transition: all 0.2s;
+    }
+
+    .lift-btn:hover, .lift-btn.lifted {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: rgba(139, 123, 61, 0.08);
+      transform: scale(1.05);
+    }
+
+    .lift-icon { font-size: 1.1rem; line-height: 1; }
+
+    .prayer-empty {
+      text-align: center;
+      padding: 28px;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      color: var(--text-3);
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: inset -5px -5px 12px rgba(0,0,0,0.40);
+      transition: all 0.3s;
+    }
+
+    .testimonial-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1), inset -5px -5px 12px rgba(0,0,0,0.50);
+    }
+
+    .testimonial-quote {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-1);
+      margin-bottom: 12px;
+    }
+
+    .testimonial-author {
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Contact Form */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-1);
+      letter-spacing: 0.05em;
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      background: var(--bg);
+      color: var(--text-1);
+      transition: all 0.2s;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(139, 123, 61, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+      font-family: 'Lora', serif;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .form-message {
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin-top: 12px;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    .form-message.success {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--success);
+      border: 1px solid var(--success);
+      display: block;
+      animation: slideInUp 0.3s ease;
+    }
+
+    /* Info Grid */
+    .info-intro {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text-2);
+      margin-bottom: 28px;
+    }
+
+    .info-table {
+      width: 100%;
+      margin-bottom: 28px;
+      border-collapse: collapse;
+    }
+
+    .info-table tr:not(:last-child) { border-bottom: 1px solid rgba(139, 123, 61, 0.15); }
+
+    .info-table td {
+      padding: 18px 0;
+      vertical-align: top;
+    }
+
+    .info-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      font-weight: 600;
+      width: 120px;
+      vertical-align: top;
+    }
+
+    .info-value {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      color: var(--text-1);
+    }
+
+    .info-section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 24px 0 16px;
+      color: var(--text-1);
+      letter-spacing: 0.02em;
+    }
+
+    .info-rows {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .info-rows { grid-template-columns: 1fr; }
+      .info-label { width: auto; display: block; margin-bottom: 4px; }
+    }
+
+    .info-row-item .info-label {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .info-row-item .info-value { font-size: 0.9rem; }
+
+    .info-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg);
+      border-top: 2px solid rgba(139, 123, 61, 0.15);
+      color: var(--text-1);
+      text-align: center;
+      padding: 48px 24px;
+      margin-top: 60px;
+    }
+
+    footer h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    footer p {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .footer-link:hover {
+      color: var(--primary);
+    }
+
+    /* Utility */
+    .hidden { display: none !important; }
+
+    @media (max-width: 768px) {
+      main { padding: 40px 16px; }
+      section { margin-bottom: 40px; }
+      .countdown-timer { gap: 16px; }
+      .countdown-num { font-size: 2rem; }
+      section h2 { font-size: 1.4rem; }
+      .card { padding: 20px; }
+      .carousel-item { aspect-ratio: 4 / 3; }
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header with Language Selector -->
+<div class="header-top">
+  <a href="/" style="color: var(--primary); text-decoration: none; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;">Home</a>
+  <div class="lang-selector">
+    <button class="lang-btn active" id="lang-en" onclick="changeLanguage('en')">🇺🇸 English</button>
+    <button class="lang-btn" id="lang-es" onclick="changeLanguage('es')">🇪🇸 Español</button>
+    <button class="lang-btn" id="lang-pt" onclick="changeLanguage('pt')">🇵🇹 Português</button>
+  </div>
+  <a href="/live/" style="color: var(--primary); text-decoration: none; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;">Live Captions</a>
+</div>
+
+<!-- Nav Drawer -->
+<div class="nav-overlay" id="nav-overlay" onclick="closeNav()"></div>
+<nav class="nav-drawer" id="nav-drawer">
+  <div class="nav-drawer-header">
+    <span style="font-weight: 600;" id="nav-menu">Menu</span>
+    <button class="nav-drawer-close" onclick="closeNav()">✕</button>
+  </div>
+  <div class="nav-drawer-content">
+    <div class="nav-drawer-section">
+      <div class="nav-drawer-section-title" id="nav-main">Main</div>
+      <a class="nav-drawer-link" id="nav-att" onclick="closeNav(); scrollTo('attendance')">Attendance</a>
+      <a class="nav-drawer-link" id="nav-scr" onclick="closeNav(); scrollTo('scripture')">Scripture</a>
+      <a class="nav-drawer-link" id="nav-dis" onclick="closeNav(); scrollTo('discussion')">Discussion</a>
+    </div>
+    <div class="nav-drawer-section">
+      <div class="nav-drawer-section-title" id="nav-comm">Community</div>
+      <a class="nav-drawer-link" id="nav-ice" onclick="closeNav(); scrollTo('spinner')">Icebreaker</a>
+      <a class="nav-drawer-link" id="nav-pray" onclick="closeNav(); scrollTo('prayer')">Prayer Wall</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Banner -->
+<header class="banner">
+  <div class="banner-org" data-translate="banner-org">A Band of Brothers</div>
+  <h1 class="banner-title">
+    <span class="word-1">FIRE</span>
+    <span class="word-2">and</span>
+    <span class="word-3">FELLOWSHIP</span>
+  </h1>
+  <p class="banner-tagline" data-translate="banner-tagline">As iron sharpens iron, so one man sharpens another — Proverbs 27:17</p>
+  <div class="banner-schedule">
+    <span data-translate="banner-schedule-1">Every Third Friday</span> · <span data-translate="banner-schedule-2">Next:</span> <span class="banner-date" id="next-date-banner"></span> · <span data-translate="banner-schedule-3">7:00 pm – 9:00 pm</span>
+  </div>
+</header>
+
+<!-- Countdown -->
+<div class="countdown-section">
+  <div class="countdown-left">
+    <div class="countdown-label" data-translate="countdown-label">Next Meeting In</div>
+    <div class="countdown-date" id="countdown-date"></div>
+  </div>
+  <div class="countdown-timer">
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cd-days">--</div>
+      <div class="countdown-unit-label" data-translate="countdown-days">Days</div>
+    </div>
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cd-hours">--</div>
+      <div class="countdown-unit-label" data-translate="countdown-hours">Hours</div>
+    </div>
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cd-mins">--</div>
+      <div class="countdown-unit-label" data-translate="countdown-mins">Mins</div>
+    </div>
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cd-secs">--</div>
+      <div class="countdown-unit-label" data-translate="countdown-secs">Secs</div>
+    </div>
+  </div>
+  <div class="countdown-right">
+    <div class="location-info">
+      <span class="label" data-translate="location-label">Location</span>
+      <span id="meeting-location"></span>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- Attendance -->
+  <section id="attendance">
+    <div class="section-label" data-translate="section-label-attend">Commitment to Attend</div>
+    <h2 data-translate="section-heading-attend">Will you be there?</h2>
+    <div class="card" style="text-align: center;">
+      <div class="attendance-when" data-translate="attendance-when">This Friday</div>
+      <div class="attendance-question" data-translate="attendance-question">Will you be there?</div>
+      <div class="attendance-subtext" data-translate="attendance-subtext">One tap. Let the group know you're coming.</div>
+      <button class="btn btn-primary" id="rsvp-btn" onclick="rsvp()" data-translate="btn-rsvp">✦ I'll Be There</button>
+      <div id="confirmed-msg" class="confirmed-msg hidden" data-translate="confirmed-msg">You're in — see you Friday</div>
+      <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(139, 123, 61, 0.15);">
+        <div style="font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-3); margin-bottom: 16px; font-weight: 600;" data-translate="who-coming">Who's Coming</div>
+        <div class="attendees-list" id="attendees-list">
+          <div style="color: var(--text-3); font-size: 0.9rem; text-align: center; padding: 16px;" data-translate="no-confirm">No one has confirmed yet — be the first</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- Scripture -->
+  <section id="scripture">
+    <div class="section-label" data-translate="section-label-scripture">Scripture</div>
+    <h2 data-translate="section-heading-scripture">A Word for Men</h2>
+    <div class="card">
+      <div class="scripture-ref" data-translate="verse-label">Verse of the Week</div>
+      <p class="scripture-text" id="verse-text" data-translate="verse-default">"As iron sharpens iron, so one man sharpens another."</p>
+      <div class="scripture-attr" id="verse-ref" data-translate="verse-ref-default">— Proverbs 27:17</div>
+      <p class="scripture-desc" data-translate="verse-desc">Draw a verse on men's fellowshipping — for reflection, for the group, or for the road ahead.</p>
+      <div class="scripture-actions">
+        <button class="btn btn-primary" onclick="drawVerse()" data-translate="btn-draw">Draw a Verse</button>
+        <button class="btn btn-secondary" onclick="copyVerse()" data-translate="btn-copy">Copy verse</button>
+      </div>
+    </div>
+
+    <div class="filters-group">
+      <div class="filters-label" data-translate="filter-label">Filter by theme</div>
+      <div class="filters">
+        <button class="btn btn-secondary" onclick="filterTheme('all')" data-translate="filter-all">All</button>
+        <button class="btn btn-secondary" onclick="filterTheme('brotherhood')" data-translate="filter-brotherhood">Brotherhood</button>
+        <button class="btn btn-secondary" onclick="filterTheme('leadership')" data-translate="filter-leadership">Leadership</button>
+        <button class="btn btn-secondary" onclick="filterTheme('wisdom')" data-translate="filter-wisdom">Wisdom</button>
+        <button class="btn btn-secondary" onclick="filterTheme('faith')" data-translate="filter-faith">Faith</button>
+        <button class="btn btn-secondary" onclick="filterTheme('character')" data-translate="filter-character">Character</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; font-weight: 600;" data-translate="reflection-label">My Reflection</div>
+      <textarea class="reflection-area" id="reflection" data-translate="reflection-placeholder" placeholder="Write a thought, a prayer, a conviction…"></textarea>
+      <div class="prayer-actions" style="margin-top: 12px;">
+        <button class="btn btn-primary" onclick="saveReflection()" data-translate="btn-save-reflection">✦ Save Reflection</button>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- Challenge -->
+  <section id="challenge">
+    <div class="section-label" data-translate="section-label-challenge">Challenge</div>
+    <h2 data-translate="section-heading-challenge">This Week's Assignment</h2>
+    <div class="card">
+      <div class="scripture-ref" data-translate="challenge-week">Week 1</div>
+      <p class="challenge-text" data-translate="challenge-text">Ask a brother: "What's one thing you wish I knew about you?" Then only listen. Don't fix, don't explain, don't defend. Just hear him. Grace starts with attention.</p>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- Discussion -->
+  <section id="discussion">
+    <div class="section-label" data-translate="section-label-discussion">For the Group</div>
+    <h2 data-translate="section-heading-discussion">Discussion Questions</h2>
+    <ol class="questions-list">
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">I</span>
+          <p class="question-text" data-translate="q1">Where in your life are you still trying to earn God's approval instead of living from it?</p>
+        </div>
+      </li>
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">II</span>
+          <p class="question-text" data-translate="q2">How does knowing salvation is a gift change how you handle your failures?</p>
+        </div>
+      </li>
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">III</span>
+          <p class="question-text" data-translate="q3">What would it look like this week to live <em>from</em> grace rather than <em>toward</em> it?</p>
+        </div>
+      </li>
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">IV</span>
+          <p class="question-text" data-translate="q4">Who is a man you consider a model of grace? What specifically does he do?</p>
+        </div>
+      </li>
+      <li class="card-small">
+        <div style="display: flex; gap: 16px;">
+          <span class="question-num">V</span>
+          <p class="question-text" data-translate="q5">If your brothers were asked what kind of man you are, what would you like it to be?</p>
+        </div>
+      </li>
+    </ol>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- Spinner -->
+  <section id="spinner">
+    <div class="section-label" data-translate="section-label-spinner">Opening Round</div>
+    <h2 data-translate="section-heading-spinner">Icebreaker Spinner</h2>
+    <div class="card" style="text-align: center;">
+      <p class="spinner-desc" data-translate="spinner-desc">Press Spin to get tonight's opening question.</p>
+      <div class="spinner-canvas">
+        <canvas id="spinner-canvas" width="280" height="280"></canvas>
+      </div>
+      <p class="spinner-result" id="spinner-result" data-translate="spinner-result">Spin to begin</p>
+      <button class="btn btn-primary" onclick="spinWheel()" data-translate="btn-spin">Spin</button>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- Prayer -->
+  <section id="prayer">
+    <div class="section-label" data-translate="section-label-prayer">Community</div>
+    <h2 data-translate="section-heading-prayer">Prayer Wall</h2>
+    <div class="card" style="margin-bottom: 0;">
+      <div class="prayer-row">
+        <input type="text" class="prayer-input" id="prayer-name" data-translate="prayer-name-placeholder" placeholder="Your name (optional)" style="flex: 1;">
+        <button class="btn btn-primary" onclick="addPrayer()" style="flex-shrink: 0;" data-translate="btn-add-prayer">✦ Add</button>
+      </div>
+      <textarea class="prayer-input" id="prayer-text" data-translate="prayer-placeholder" placeholder="Share a prayer request…"></textarea>
+      <div class="prayer-actions">
+        <button class="btn btn-secondary" onclick="exportPrayers()" data-translate="btn-save-prayers">Save Prayers</button>
+        <button class="btn btn-secondary" onclick="clearPrayersAfterMeeting()" data-translate="btn-clear-prayers">Clear for Next Meeting</button>
+      </div>
+    </div>
+    <div class="prayer-list" id="prayer-list">
+      <p class="prayer-empty" data-translate="prayer-empty">No requests yet — be the first to share one.</p>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials">
+    <div class="section-label" data-translate="section-label-testimonials">Stories</div>
+    <h2 data-translate="section-heading-testimonials">Testimonials</h2>
+    <div class="card" style="margin-bottom: 24px;">
+      <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+        <input type="text" id="testimonial-name" data-translate="testimonial-name-placeholder" placeholder="Your name (optional)" class="prayer-input" style="flex: 1; margin-bottom: 0;">
+        <button class="btn btn-primary" onclick="showTestimonialForm()" style="flex-shrink: 0;" data-translate="btn-add-story">✦ Add Story</button>
+      </div>
+      <textarea id="testimonial-text" data-translate="testimonial-placeholder" placeholder="Share your story about this group…" class="prayer-input" style="display: none; margin-bottom: 12px;"></textarea>
+      <button class="btn btn-secondary" id="testimonial-submit-btn" onclick="addTestimonial()" style="display: none; margin-bottom: 0;" data-translate="btn-submit-story">Submit Story</button>
+      <div id="testimonial-list" style="padding-top: 20px; border-top: 1px solid rgba(139, 123, 61, 0.15);">
+        <div class="testimonial-card" data-original="true">
+          <p class="testimonial-quote" data-translate="testimonial-1">"This group changed how I see brotherhood. I finally have men I can be real with."</p>
+          <p class="testimonial-author" data-translate="testimonial-1-author">— James M.</p>
+        </div>
+        <div class="testimonial-card" data-original="true">
+          <p class="testimonial-quote" data-translate="testimonial-2">"Coming here every third Friday is the best commitment I've made to myself."</p>
+          <p class="testimonial-author" data-translate="testimonial-2-author">— Marcus T.</p>
+        </div>
+        <div class="testimonial-card" data-original="true">
+          <p class="testimonial-quote" data-translate="testimonial-3">"As iron sharpens iron — that's not just a verse here, it's lived out every meeting."</p>
+          <p class="testimonial-author" data-translate="testimonial-3-author">— David R.</p>
+        </div>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- Info -->
+  <section id="info">
+    <div class="section-label" data-translate="section-label-info">The Group</div>
+    <h2 data-translate="section-heading-info">Nobody Hands You a Manual</h2>
+    <div class="card">
+      <p class="info-intro" data-translate="info-intro">Nobody hands you a manual when you become a brother in Christ. That's what we're here for — to figure it out together, sharpen each other, and grow stronger.</p>
+      <table class="info-table">
+        <tr>
+          <td><div class="info-label" data-translate="info-label-date">Date</div></td>
+          <td><div class="info-value" data-translate="info-value-date">Every Third Friday · 7:00 pm – 9:00 pm</div></td>
+        </tr>
+        <tr>
+          <td><div class="info-label" data-translate="info-label-location">Location</div></td>
+          <td><div class="info-value" data-translate-html="info-value-location">Freddy's House<br>1720 Alameda Drive<br>Spring Hill, FL 34609</div></td>
+        </tr>
+      </table>
+      <div style="border-top: 1px solid rgba(139, 123, 61, 0.15); padding-top: 20px;">
+        <div class="info-section-title" data-translate="info-section-purpose">Purpose</div>
+        <div class="info-rows">
+          <div>
+            <div class="info-label" data-translate="info-label-equipping">Equipping</div>
+            <div class="info-value" data-translate="info-value-equipping">Growing in faith and wisdom</div>
+          </div>
+          <div>
+            <div class="info-label" data-translate="info-label-growing">Growing Together</div>
+            <div class="info-value" data-translate="info-value-growing">Deepening brotherhood</div>
+          </div>
+        </div>
+      </div>
+      <div style="border-top: 1px solid rgba(139, 123, 61, 0.15); padding-top: 20px;">
+        <div class="info-section-title" data-translate="info-section-group">Group Info</div>
+        <div class="info-rows">
+          <div>
+            <div class="info-label" data-translate="info-label-who">Who</div>
+            <div class="info-value" data-translate="info-value-who">Men · All Ages</div>
+          </div>
+          <div>
+            <div class="info-label" data-translate="info-label-cost">Cost</div>
+            <div class="info-value" data-translate="info-value-cost">Free</div>
+          </div>
+        </div>
+      </div>
+      <div class="info-actions">
+        <a href="https://maps.google.com/?q=1720+Alameda+Drive,+Spring+Hill,+FL+34609" target="_blank" rel="noopener" class="btn btn-primary" data-translate="btn-directions">Get Directions</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <h3 data-translate="footer-title">FIRE &amp; FELLOWSHIP</h3>
+  <p data-translate="footer-location">Spring Hill, Florida · Brothers in Christ</p>
+  <div class="footer-links">
+    <a href="#attendance" class="footer-link" data-translate="footer-link-1">Attendance</a>
+    <a href="#prayer" class="footer-link" data-translate="footer-link-2">Prayer</a>
+    <a href="#info" class="footer-link" data-translate="footer-link-3">Info</a>
+  </div>
+</footer>
+
+<script>
+/* Domain Detection & CORS Testing */
+const currentDomain = window.location.origin;
+console.log('🔗 Fire and Fellowship running from:', currentDomain);
+console.log('📍 CORS Domain to add to Supabase:', currentDomain);
+
+/* Test CORS connection on page load */
+async function testCORS() {
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps?limit=0`, {
+      mode: 'cors',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+    });
+    if (res.ok) {
+      console.log('✅ CORS is working! Supabase connection successful.');
+      console.log('🎉 Your data will save and load correctly.');
+      return true;
+    } else {
+      console.warn('⚠️ Supabase responded but with error:', res.status, res.statusText);
+      return false;
+    }
+  } catch (e) {
+    console.error('❌ CORS BLOCKED - Supabase requests are being blocked');
+    console.error('Fix: Add this domain to Supabase:');
+    console.error('   Domain:', currentDomain);
+    console.error('   Path: Supabase Dashboard > Project Settings > API > CORS Allowed Origins');
+    console.error('   Then reload this page.');
+    return false;
+  }
+}
+
+window.addEventListener('load', testCORS);
+
+/* Multi-Language Support */
+const translations = {
+  en: {
+    'header-menu': 'Menu',
+    'nav-menu': 'Menu',
+    'nav-main': 'Main',
+    'nav-att': 'Attendance',
+    'nav-scr': 'Scripture',
+    'nav-dis': 'Discussion',
+    'nav-comm': 'Community',
+    'nav-ice': 'Icebreaker',
+    'nav-pray': 'Prayer Wall',
+    'banner-org': 'A Band of Brothers',
+    'banner-tagline': 'As iron sharpens iron, so one man sharpens another — Proverbs 27:17',
+    'banner-schedule-1': 'Every Third Friday',
+    'banner-schedule-2': 'Next:',
+    'banner-schedule-3': '7:00 pm – 9:00 pm',
+    'countdown-label': 'Next Meeting In',
+    'countdown-days': 'Days',
+    'countdown-hours': 'Hours',
+    'countdown-mins': 'Mins',
+    'countdown-secs': 'Secs',
+    'location-label': 'Location',
+    'section-label-attend': 'Commitment to Attend',
+    'section-heading-attend': 'Will you be there?',
+    'attendance-when': 'This Friday',
+    'attendance-question': 'Will you be there?',
+    'attendance-subtext': 'One tap. Let the group know you\'re coming.',
+    'btn-rsvp': '✦ I\'ll Be There',
+    'confirmed-msg': 'You\'re in — see you Friday',
+    'who-coming': 'Who\'s Coming',
+    'no-confirm': 'No one has confirmed yet — be the first',
+    'section-label-scripture': 'Scripture',
+    'section-heading-scripture': 'A Word for Men',
+    'verse-label': 'Verse of the Week',
+    'verse-default': '"As iron sharpens iron, so one man sharpens another."',
+    'verse-ref-default': '— Proverbs 27:17',
+    'verse-desc': 'Draw a verse on men\'s fellowshipping — for reflection, for the group, or for the road ahead.',
+    'btn-draw': 'Draw a Verse',
+    'btn-copy': 'Copy verse',
+    'filter-label': 'Filter by theme',
+    'filter-all': 'All',
+    'filter-brotherhood': 'Brotherhood',
+    'filter-leadership': 'Leadership',
+    'filter-wisdom': 'Wisdom',
+    'filter-faith': 'Faith',
+    'filter-character': 'Character',
+    'reflection-label': 'My Reflection',
+    'reflection-placeholder': 'Write a thought, a prayer, a conviction…',
+    'btn-save-reflection': '✦ Save Reflection',
+    'section-label-challenge': 'Challenge',
+    'section-heading-challenge': 'This Week\'s Assignment',
+    'challenge-week': 'Week 1',
+    'challenge-text': 'Ask a brother: "What\'s one thing you wish I knew about you?" Then only listen. Don\'t fix, don\'t explain, don\'t defend. Just hear him. Grace starts with attention.',
+    'section-label-discussion': 'For the Group',
+    'section-heading-discussion': 'Discussion Questions',
+    'q1': 'Where in your life are you still trying to earn God\'s approval instead of living from it?',
+    'q2': 'How does knowing salvation is a gift change how you handle your failures?',
+    'q3': 'What would it look like this week to live from grace rather than toward it?',
+    'q4': 'Who is a man you consider a model of grace? What specifically does he do?',
+    'q5': 'If your brothers were asked what kind of man you are, what would you like it to be?',
+    'section-label-spinner': 'Opening Round',
+    'section-heading-spinner': 'Icebreaker Spinner',
+    'spinner-desc': 'Press Spin to get tonight\'s opening question.',
+    'spinner-result': 'Spin to begin',
+    'btn-spin': 'Spin',
+    'section-label-prayer': 'Community',
+    'section-heading-prayer': 'Prayer Wall',
+    'prayer-name-placeholder': 'Your name (optional)',
+    'btn-add-prayer': '✦ Add',
+    'prayer-placeholder': 'Share a prayer request…',
+    'btn-save-prayers': 'Save Prayers',
+    'btn-clear-prayers': 'Clear for Next Meeting',
+    'prayer-empty': 'No requests yet — be the first to share one.',
+    'section-label-testimonials': 'Stories',
+    'section-heading-testimonials': 'Testimonials',
+    'testimonial-name-placeholder': 'Your name (optional)',
+    'btn-add-story': '✦ Add Story',
+    'testimonial-placeholder': 'Share your story about this group…',
+    'btn-submit-story': 'Submit Story',
+    'testimonial-1': '"This group changed how I see brotherhood. I finally have men I can be real with."',
+    'testimonial-1-author': '— James M.',
+    'testimonial-2': '"Coming here every third Friday is the best commitment I\'ve made to myself."',
+    'testimonial-2-author': '— Marcus T.',
+    'testimonial-3': '"As iron sharpens iron — that\'s not just a verse here, it\'s lived out every meeting."',
+    'testimonial-3-author': '— David R.',
+    'section-label-info': 'The Group',
+    'section-heading-info': 'Nobody Hands You a Manual',
+    'info-intro': 'Nobody hands you a manual when you become a brother in Christ. That\'s what we\'re here for — to figure it out together, sharpen each other, and grow stronger.',
+    'info-label-date': 'Date',
+    'info-value-date': 'Every Third Friday · 7:00 pm – 9:00 pm',
+    'info-label-location': 'Location',
+    'info-value-location': 'Freddy\'s House<br>1720 Alameda Drive<br>Spring Hill, FL 34609',
+    'info-section-purpose': 'Purpose',
+    'info-label-equipping': 'Equipping',
+    'info-value-equipping': 'Growing in faith and wisdom',
+    'info-label-growing': 'Growing Together',
+    'info-value-growing': 'Deepening brotherhood',
+    'info-section-group': 'Group Info',
+    'info-label-who': 'Who',
+    'info-value-who': 'Men · All Ages',
+    'info-label-cost': 'Cost',
+    'info-value-cost': 'Free',
+    'btn-directions': 'Get Directions',
+    'footer-title': 'FIRE & FELLOWSHIP',
+    'footer-location': 'Spring Hill, Florida · Brothers in Christ',
+    'footer-link-1': 'Attendance',
+    'footer-link-2': 'Prayer',
+    'footer-link-3': 'Info',
+  },
+  es: {
+    'header-menu': 'Menú',
+    'nav-menu': 'Menú',
+    'nav-main': 'Principal',
+    'nav-att': 'Asistencia',
+    'nav-scr': 'Escritura',
+    'nav-dis': 'Discusión',
+    'nav-comm': 'Comunidad',
+    'nav-ice': 'Rompehielo',
+    'nav-pray': 'Pared de Oración',
+    'banner-org': 'Una Banda de Hermanos',
+    'banner-tagline': 'Como el hierro afila el hierro, así un hombre afila a otro — Proverbios 27:17',
+    'banner-schedule-1': 'Cada Tercer Viernes',
+    'banner-schedule-2': 'Próximo:',
+    'banner-schedule-3': '7:00 pm – 9:00 pm',
+    'countdown-label': 'Próxima Reunión En',
+    'countdown-days': 'Días',
+    'countdown-hours': 'Horas',
+    'countdown-mins': 'Mins',
+    'countdown-secs': 'Segs',
+    'location-label': 'Ubicación',
+    'section-label-attend': 'Compromiso de Asistencia',
+    'section-heading-attend': '¿Estarás allí?',
+    'attendance-when': 'Este Viernes',
+    'attendance-question': '¿Estarás allí?',
+    'attendance-subtext': 'Un toque. Déjale saber al grupo que vienes.',
+    'btn-rsvp': '✦ Yo Estaré Allí',
+    'confirmed-msg': 'Estás dentro — nos vemos el viernes',
+    'who-coming': 'Quién Viene',
+    'no-confirm': 'Aún nadie ha confirmado — sé el primero',
+    'section-label-scripture': 'Escritura',
+    'section-heading-scripture': 'Una Palabra para Hombres',
+    'verse-label': 'Verso de la Semana',
+    'verse-default': '"Como el hierro afila el hierro, así un hombre afila a otro."',
+    'verse-ref-default': '— Proverbios 27:17',
+    'verse-desc': 'Elige un verso sobre la comunión de hombres — para la reflexión, para el grupo, o para el camino adelante.',
+    'btn-draw': 'Elige un Verso',
+    'btn-copy': 'Copiar verso',
+    'filter-label': 'Filtrar por tema',
+    'filter-all': 'Todos',
+    'filter-brotherhood': 'Hermandad',
+    'filter-leadership': 'Liderazgo',
+    'filter-wisdom': 'Sabiduría',
+    'filter-faith': 'Fe',
+    'filter-character': 'Carácter',
+    'reflection-label': 'Mi Reflexión',
+    'reflection-placeholder': 'Escribe un pensamiento, una oración, una convicción…',
+    'btn-save-reflection': '✦ Guardar Reflexión',
+    'section-label-challenge': 'Desafío',
+    'section-heading-challenge': 'La Asignación de Esta Semana',
+    'challenge-week': 'Semana 1',
+    'challenge-text': 'Pregúntale a un hermano: "¿Qué es una cosa que desearías que supiera sobre ti?" Luego solo escucha. No corrijas, no expliques, no te defiendas. Solo escúchalo. La gracia comienza con la atención.',
+    'section-label-discussion': 'Para el Grupo',
+    'section-heading-discussion': 'Preguntas de Discusión',
+    'q1': '¿Dónde en tu vida aún estás tratando de ganar la aprobación de Dios en lugar de vivir desde ella?',
+    'q2': '¿Cómo cambia el saber que la salvación es un regalo la forma en que manejas tus fracasos?',
+    'q3': '¿Cómo sería esta semana vivir desde la gracia en lugar de hacia ella?',
+    'q4': '¿Quién es un hombre que consideras un modelo de gracia? ¿Qué específicamente hace él?',
+    'q5': 'Si tus hermanos fueran preguntados qué tipo de hombre eres, ¿qué te gustaría que fuera?',
+    'section-label-spinner': 'Ronda de Apertura',
+    'section-heading-spinner': 'Rueda Rompehielos',
+    'spinner-desc': 'Presiona Girar para obtener la pregunta de apertura de esta noche.',
+    'spinner-result': 'Gira para comenzar',
+    'btn-spin': 'Girar',
+    'section-label-prayer': 'Comunidad',
+    'section-heading-prayer': 'Pared de Oración',
+    'prayer-name-placeholder': 'Tu nombre (opcional)',
+    'btn-add-prayer': '✦ Agregar',
+    'prayer-placeholder': 'Comparte una petición de oración…',
+    'btn-save-prayers': 'Guardar Oraciones',
+    'btn-clear-prayers': 'Limpiar para la Próxima Reunión',
+    'prayer-empty': 'No hay solicitudes aún — sé el primero en compartir una.',
+    'section-label-testimonials': 'Historias',
+    'section-heading-testimonials': 'Testimonios',
+    'testimonial-name-placeholder': 'Tu nombre (opcional)',
+    'btn-add-story': '✦ Agregar Historia',
+    'testimonial-placeholder': 'Comparte tu historia sobre este grupo…',
+    'btn-submit-story': 'Enviar Historia',
+    'testimonial-1': '"Este grupo cambió cómo veo la hermandad. Finalmente tengo hombres con los que puedo ser auténtico."',
+    'testimonial-1-author': '— James M.',
+    'testimonial-2': '"Venir aquí cada tercer viernes es el mejor compromiso que he hecho conmigo mismo."',
+    'testimonial-2-author': '— Marcus T.',
+    'testimonial-3': '"Como el hierro afila el hierro — eso no es solo un verso aquí, se vive en cada reunión."',
+    'testimonial-3-author': '— David R.',
+    'section-label-info': 'El Grupo',
+    'section-heading-info': 'Nadie Te da un Manual',
+    'info-intro': 'Nadie te da un manual cuando te conviertes en hermano en Cristo. Para eso estamos aquí — para averiguarlo juntos, afilarnos mutuamente y crecer más fuertes.',
+    'info-label-date': 'Fecha',
+    'info-value-date': 'Cada Tercer Viernes · 7:00 pm – 9:00 pm',
+    'info-label-location': 'Ubicación',
+    'info-value-location': 'Casa de Freddy<br>1720 Alameda Drive<br>Spring Hill, FL 34609',
+    'info-section-purpose': 'Propósito',
+    'info-label-equipping': 'Capacitación',
+    'info-value-equipping': 'Creciendo en fe y sabiduría',
+    'info-label-growing': 'Creciendo Juntos',
+    'info-value-growing': 'Profundizando la hermandad',
+    'info-section-group': 'Información del Grupo',
+    'info-label-who': 'Quién',
+    'info-value-who': 'Hombres · Todas las Edades',
+    'info-label-cost': 'Costo',
+    'info-value-cost': 'Gratis',
+    'btn-directions': 'Obtener Direcciones',
+    'footer-title': 'FUEGO Y COMUNIÓN',
+    'footer-location': 'Spring Hill, Florida · Hermanos en Cristo',
+    'footer-link-1': 'Asistencia',
+    'footer-link-2': 'Oración',
+    'footer-link-3': 'Información',
+  },
+  pt: {
+    'header-menu': 'Menu',
+    'nav-menu': 'Menu',
+    'nav-main': 'Principal',
+    'nav-att': 'Presença',
+    'nav-scr': 'Escritura',
+    'nav-dis': 'Discussão',
+    'nav-comm': 'Comunidade',
+    'nav-ice': 'Quebra-gelo',
+    'nav-pray': 'Mural de Oração',
+    'banner-org': 'Uma Banda de Irmãos',
+    'banner-tagline': 'Assim como o ferro afia o ferro, um homem afia a outro — Provérbios 27:17',
+    'banner-schedule-1': 'Cada Terceira Sexta-feira',
+    'banner-schedule-2': 'Próxima:',
+    'banner-schedule-3': '7:00 pm – 9:00 pm',
+    'countdown-label': 'Próxima Reunião Em',
+    'countdown-days': 'Dias',
+    'countdown-hours': 'Horas',
+    'countdown-mins': 'Mins',
+    'countdown-secs': 'Segs',
+    'location-label': 'Localização',
+    'section-label-attend': 'Comprometimento em Comparecer',
+    'section-heading-attend': 'Você estará lá?',
+    'attendance-when': 'Esta Sexta-feira',
+    'attendance-question': 'Você estará lá?',
+    'attendance-subtext': 'Um toque. Deixe o grupo saber que você está vindo.',
+    'btn-rsvp': '✦ Estarei Lá',
+    'confirmed-msg': 'Você está dentro — vejo você na sexta',
+    'who-coming': 'Quem Está Vindo',
+    'no-confirm': 'Ninguém confirmou ainda — seja o primeiro',
+    'section-label-scripture': 'Escritura',
+    'section-heading-scripture': 'Uma Palavra para Homens',
+    'verse-label': 'Versículo da Semana',
+    'verse-default': '"Assim como o ferro afia o ferro, um homem afia a outro."',
+    'verse-ref-default': '— Provérbios 27:17',
+    'verse-desc': 'Escolha um versículo sobre comunhão entre homens — para reflexão, para o grupo, ou para o caminho adiante.',
+    'btn-draw': 'Escolher um Versículo',
+    'btn-copy': 'Copiar versículo',
+    'filter-label': 'Filtrar por tema',
+    'filter-all': 'Tudo',
+    'filter-brotherhood': 'Fraternidade',
+    'filter-leadership': 'Liderança',
+    'filter-wisdom': 'Sabedoria',
+    'filter-faith': 'Fé',
+    'filter-character': 'Caráter',
+    'reflection-label': 'Minha Reflexão',
+    'reflection-placeholder': 'Escreva um pensamento, uma oração, uma convicção…',
+    'btn-save-reflection': '✦ Salvar Reflexão',
+    'section-label-challenge': 'Desafio',
+    'section-heading-challenge': 'A Tarefa desta Semana',
+    'challenge-week': 'Semana 1',
+    'challenge-text': 'Pergunte a um irmão: "Qual é uma coisa que você gostaria que eu soubesse sobre você?" Depois apenas ouça. Não corrija, não explique, não se defenda. Apenas o ouça. A graça começa com atenção.',
+    'section-label-discussion': 'Para o Grupo',
+    'section-heading-discussion': 'Perguntas de Discussão',
+    'q1': 'Onde em sua vida você ainda está tentando ganhar a aprovação de Deus em vez de viver a partir dela?',
+    'q2': 'Como saber que a salvação é um presente muda a forma como você lida com seus fracassos?',
+    'q3': 'Como seria nesta semana viver a partir da graça em vez de em direção a ela?',
+    'q4': 'Quem é um homem que você considera um modelo de graça? O que especificamente ele faz?',
+    'q5': 'Se seus irmãos fossem perguntados que tipo de homem você é, o que gostaria que fosse?',
+    'section-label-spinner': 'Rodada de Abertura',
+    'section-heading-spinner': 'Girador de Quebra-gelo',
+    'spinner-desc': 'Pressione Girar para obter a pergunta de abertura de hoje à noite.',
+    'spinner-result': 'Gire para começar',
+    'btn-spin': 'Girar',
+    'section-label-prayer': 'Comunidade',
+    'section-heading-prayer': 'Mural de Oração',
+    'prayer-name-placeholder': 'Seu nome (opcional)',
+    'btn-add-prayer': '✦ Adicionar',
+    'prayer-placeholder': 'Compartilhe um pedido de oração…',
+    'btn-save-prayers': 'Salvar Orações',
+    'btn-clear-prayers': 'Limpar para a Próxima Reunião',
+    'prayer-empty': 'Sem solicitações ainda — seja o primeiro a compartilhar uma.',
+    'section-label-testimonials': 'Histórias',
+    'section-heading-testimonials': 'Testemunhos',
+    'testimonial-name-placeholder': 'Seu nome (opcional)',
+    'btn-add-story': '✦ Adicionar História',
+    'testimonial-placeholder': 'Compartilhe sua história sobre este grupo…',
+    'btn-submit-story': 'Enviar História',
+    'testimonial-1': '"Este grupo mudou como vejo a fraternidade. Finalmente tenho homens com quem posso ser autêntico."',
+    'testimonial-1-author': '— James M.',
+    'testimonial-2': '"Vir aqui a cada terceira sexta-feira é o melhor compromisso que fiz comigo mesmo."',
+    'testimonial-2-author': '— Marcus T.',
+    'testimonial-3': '"Assim como o ferro afia o ferro — isso não é apenas um versículo aqui, é vivido em cada reunião."',
+    'testimonial-3-author': '— David R.',
+    'section-label-info': 'O Grupo',
+    'section-heading-info': 'Ninguém Lhe Dá um Manual',
+    'info-intro': 'Ninguém lhe dá um manual quando você se torna irmão em Cristo. Por isso estamos aqui — para descobrir juntos, afiar um ao outro e crescer mais forte.',
+    'info-label-date': 'Data',
+    'info-value-date': 'Cada Terceira Sexta-feira · 7:00 pm – 9:00 pm',
+    'info-label-location': 'Localização',
+    'info-value-location': 'Casa de Freddy<br>1720 Alameda Drive<br>Spring Hill, FL 34609',
+    'info-section-purpose': 'Propósito',
+    'info-label-equipping': 'Equipamento',
+    'info-value-equipping': 'Crescendo em fé e sabedoria',
+    'info-label-growing': 'Crescendo Juntos',
+    'info-value-growing': 'Aprofundando a fraternidade',
+    'info-section-group': 'Informações do Grupo',
+    'info-label-who': 'Quem',
+    'info-value-who': 'Homens · Todas as Idades',
+    'info-label-cost': 'Custo',
+    'info-value-cost': 'Gratuito',
+    'btn-directions': 'Obter Direções',
+    'footer-title': 'FOGO E COMUNHÃO',
+    'footer-location': 'Spring Hill, Florida · Irmãos em Cristo',
+    'footer-link-1': 'Presença',
+    'footer-link-2': 'Oração',
+    'footer-link-3': 'Informação',
+  }
+};
+
+let currentLanguage = 'en';
+
+function getTranslation(key) {
+  return translations[currentLanguage][key] || translations['en'][key] || key;
+}
+
+function changeLanguage(lang) {
+  currentLanguage = lang;
+  try { localStorage.setItem('ff_language', lang); } catch (_) {}
+  updateAllTranslations();
+  updateLanguageButtonStates();
+}
+
+function updateLanguageButtonStates() {
+  ['en', 'es', 'pt'].forEach(lang => {
+    const btn = document.getElementById(`lang-${lang}`);
+    if (btn) {
+      btn.classList.toggle('active', lang === currentLanguage);
+    }
+  });
+}
+
+function updateAllTranslations() {
+  // Update all elements with data-translate attribute
+  document.querySelectorAll('[data-translate]').forEach(el => {
+    const key = el.getAttribute('data-translate');
+    if (key) {
+      const text = getTranslation(key);
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = text;
+      } else {
+        el.textContent = text;
+      }
+    }
+  });
+
+  // Update elements with data-translate-html (for content with line breaks)
+  document.querySelectorAll('[data-translate-html]').forEach(el => {
+    const key = el.getAttribute('data-translate-html');
+    if (key) {
+      el.innerHTML = getTranslation(key);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const saved = localStorage.getItem('ff_language');
+  if (saved && ['en', 'es', 'pt'].includes(saved)) {
+    currentLanguage = saved;
+  }
+  updateLanguageButtonStates();
+  updateAllTranslations();
+});
+
+/* Dark Mode */
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  try { localStorage.setItem('ff_theme', isDark ? 'light' : 'dark'); } catch (_) {}
+  updateDarkModeIcon();
+}
+
+function updateDarkModeIcon() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const btn = document.getElementById('dark-mode-btn');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+}
+
+try {
+  const saved = localStorage.getItem('ff_theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+} catch (_) {}
+updateDarkModeIcon();
+
+/* Navigation */
+function toggleNav() {
+  document.getElementById('nav-drawer').classList.toggle('open');
+  document.getElementById('nav-overlay').classList.toggle('open');
+}
+
+function closeNav() {
+  document.getElementById('nav-drawer').classList.remove('open');
+  document.getElementById('nav-overlay').classList.remove('open');
+}
+
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+/* Carousel */
+let currentSlide = 0;
+const slides = document.querySelectorAll('.carousel-item');
+
+function showSlide(n) {
+  if (n >= slides.length) currentSlide = 0;
+  if (n < 0) currentSlide = slides.length - 1;
+  const inner = document.getElementById('carousel-inner');
+  if (inner) inner.style.transform = `translateX(${-currentSlide * 100}%)`;
+  document.querySelectorAll('.dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentSlide);
+  });
+}
+
+function nextSlide() { showSlide(++currentSlide); }
+function prevSlide() { showSlide(--currentSlide); }
+
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.getElementById('carousel-dots');
+  if (container && slides.length > 0) {
+    slides.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.onclick = () => { currentSlide = i; showSlide(currentSlide); };
+      container.appendChild(dot);
+    });
+    showSlide(0);
+  }
+});
+
+/* Contact Form */
+function submitContact(e) {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.querySelector('[name="name"]').value;
+  const email = form.querySelector('[name="email"]').value;
+  const subject = form.querySelector('[name="subject"]').value;
+  const message = form.querySelector('[name="message"]').value;
+
+  const msg = encodeURIComponent(`Contact from ${name} (${email})\n\nSubject: ${subject}\n\nMessage:\n${message}`);
+  window.open(`https://wa.me/14079252589?text=${msg}`, '_blank');
+
+  const msgEl = document.getElementById('contact-message');
+  msgEl.textContent = '✓ Message sent via WhatsApp!';
+  msgEl.classList.add('success');
+  form.reset();
+  setTimeout(() => {
+    msgEl.classList.remove('success');
+    msgEl.textContent = '';
+  }, 5000);
+}
+
+/* Countdown */
+function getNextThirdFriday() {
+  const now = new Date();
+  for (let mo = 0; mo < 4; mo++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + mo, 1);
+    const dow = d.getDay();
+    const firstFri = 1 + ((5 - dow + 7) % 7);
+    d.setDate(firstFri + 14);
+    d.setHours(19, 0, 0, 0);
+    if (d > now) return d;
+  }
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function updateCountdown() {
+  const target = getNextThirdFriday();
+  if (!target) return;
+  const opts = { month: 'long', day: 'numeric', year: 'numeric' };
+  const countdownDateEl = document.getElementById('countdown-date');
+  const nextDateEl = document.getElementById('next-date-banner');
+  const locEl = document.getElementById('meeting-location');
+  if (!countdownDateEl || !nextDateEl || !locEl) return;
+  countdownDateEl.textContent = target.toLocaleDateString('en-US', opts);
+  nextDateEl.textContent = target.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  locEl.textContent = '1720 Alameda Drive · Spring Hill, FL 34609';
+  const diff = target - Date.now();
+  const daysEl = document.getElementById('cd-days');
+  const hoursEl = document.getElementById('cd-hours');
+  const minsEl = document.getElementById('cd-mins');
+  const secsEl = document.getElementById('cd-secs');
+  if (daysEl && hoursEl && minsEl && secsEl) {
+    daysEl.textContent = pad(Math.max(Math.floor(diff / 86400000), 0));
+    hoursEl.textContent = pad(Math.max(Math.floor((diff % 86400000) / 3600000), 0));
+    minsEl.textContent = pad(Math.max(Math.floor((diff % 3600000) / 60000), 0));
+    secsEl.textContent = pad(Math.max(Math.floor((diff % 60000) / 1000), 0));
+  }
+}
+
+/* Auto-Reset after Meeting */
+async function checkAndResetAfterMeeting() {
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+
+  const now = new Date();
+  const meetingTime = getNextThirdFriday();
+
+  // If the next meeting time is in the future, no need to reset
+  if (meetingTime > now) return;
+
+  // Check if we've already reset for this meeting
+  try {
+    const lastReset = localStorage.getItem('ff_last_reset');
+    if (lastReset === meetingTime.toISOString().split('T')[0]) return;
+  } catch (_) {}
+
+  // Reset has already happened for this meeting time
+  try {
+    // Delete all RSVPs
+    await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+    });
+
+    // Delete all prayers
+    await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+    });
+
+    // Delete all testimonials
+    await fetch(`${SUPABASE_URL}/rest/v1/testimonies`, {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+    });
+
+    // Mark reset as done
+    localStorage.setItem('ff_last_reset', meetingTime.toISOString().split('T')[0]);
+
+    console.log('Auto-reset: All meeting data cleared after 7 PM');
+  } catch (e) {
+    console.error('Auto-reset error:', e);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  checkAndResetAfterMeeting();
+  setInterval(checkAndResetAfterMeeting, 60000); // Check every minute
+});
+
+/* Verses */
+const versesByLanguage = {
+  en: [
+    { ref: 'Proverbs 27:17', text: '"As iron sharpens iron, so one man sharpens another."', themes: ['brotherhood', 'leadership'] },
+    { ref: 'Ephesians 4:2–3', text: '"Be completely humble and gentle; be patient, bearing with one another in love."', themes: ['brotherhood'] },
+    { ref: 'Proverbs 13:20', text: '"Walk with the wise and become wise."', themes: ['wisdom', 'brotherhood'] },
+    { ref: 'Joshua 1:9', text: '"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you."', themes: ['courage', 'leadership'] },
+    { ref: '1 Peter 4:10', text: '"Each of you should use whatever gift you have received to serve others."', themes: ['leadership'] },
+    { ref: '2 Timothy 2:2', text: '"Entrust to reliable people who will also be qualified to teach others."', themes: ['leadership'] },
+    { ref: 'Proverbs 17:17', text: '"A friend loves at all times, and a brother is born for a time of adversity."', themes: ['brotherhood', 'faith'] },
+    { ref: '1 Thessalonians 5:11', text: '"Therefore encourage one another and build each other up, just as in fact you are doing."', themes: ['brotherhood', 'encouragement'] },
+    { ref: 'Proverbs 11:14', text: '"For lack of guidance a nation falls, but victory is sure with many advisers."', themes: ['wisdom', 'leadership'] },
+    { ref: 'Psalm 27:10', text: '"Though my father and mother forsake me, the Lord will receive me."', themes: ['faith', 'grace'] },
+    { ref: 'Romans 12:10', text: '"Be devoted to one another in love. Honor one another above yourselves."', themes: ['brotherhood', 'character'] },
+  ],
+  es: [
+    { ref: 'Proverbios 27:17', text: '"Como el hierro afila el hierro, así un hombre afila a otro."', themes: ['brotherhood', 'leadership'] },
+    { ref: 'Efesios 4:2–3', text: '"Sean completamente humildes y gentiles; sean pacientes, tolerándose los unos a los otros en amor."', themes: ['brotherhood'] },
+    { ref: 'Proverbios 13:20', text: '"Camina con los sabios y te volverás sabio."', themes: ['wisdom', 'brotherhood'] },
+    { ref: 'Josué 1:9', text: '"Sé fuerte y valiente. No tengas miedo; no te desanimes, pues el Señor tu Dios está contigo."', themes: ['courage', 'leadership'] },
+    { ref: '1 Pedro 4:10', text: '"Cada uno debe usar el don que ha recibido para servir a otros."', themes: ['leadership'] },
+    { ref: '2 Timoteo 2:2', text: '"Lo que has oído de mí, transmítelo a hombres dignos de confianza que también sean capaces de enseñar a otros."', themes: ['leadership'] },
+    { ref: 'Proverbios 17:17', text: '"El amigo ama en todo tiempo, y el hermano nace para la adversidad."', themes: ['brotherhood', 'faith'] },
+    { ref: '1 Tesalonicenses 5:11', text: '"Por lo tanto, anímense y edificarémonos los unos a los otros, así como lo están haciendo."', themes: ['brotherhood', 'encouragement'] },
+    { ref: 'Proverbios 11:14', text: '"Sin dirección, una nación cae, pero con muchos consejeros hay victoria."', themes: ['wisdom', 'leadership'] },
+    { ref: 'Salmo 27:10', text: '"Aunque mi padre y mi madre me abandonen, el Señor me recibe."', themes: ['faith', 'grace'] },
+    { ref: 'Romanos 12:10', text: '"Ámense los unos a los otros. Honrense más los unos a los otros que a ustedes mismos."', themes: ['brotherhood', 'character'] },
+  ],
+  pt: [
+    { ref: 'Provérbios 27:17', text: '"Assim como o ferro afia o ferro, um homem afia a outro."', themes: ['brotherhood', 'leadership'] },
+    { ref: 'Efésios 4:2–3', text: '"Sê completamente humilde e gentil; sê paciente, suportando uns aos outros em amor."', themes: ['brotherhood'] },
+    { ref: 'Provérbios 13:20', text: '"Caminha com os sábios e te tornarás sábio."', themes: ['wisdom', 'brotherhood'] },
+    { ref: 'Josué 1:9', text: '"Sé forte e corajoso. Não tenha medo; não se desanime, pois o Senhor seu Deus está com você."', themes: ['courage', 'leadership'] },
+    { ref: '1 Pedro 4:10', text: '"Cada um deve usar o dom que recebeu para servir aos outros."', themes: ['leadership'] },
+    { ref: '2 Timóteo 2:2', text: '"O que ouviu de mim, confie a homens dignos de confiança, que também sejam capazes de ensinar a outros."', themes: ['leadership'] },
+    { ref: 'Provérbios 17:17', text: '"O amigo ama em todo tempo, e o irmão nasce para a adversidade."', themes: ['brotherhood', 'faith'] },
+    { ref: '1 Tessalonicenses 5:11', text: '"Portanto, encorajem-se e edifiquem-se uns aos outros, assim como o estão fazendo."', themes: ['brotherhood', 'encouragement'] },
+    { ref: 'Provérbios 11:14', text: '"Sem orientação, uma nação cai, mas com muitos conselheiros há vitória."', themes: ['wisdom', 'leadership'] },
+    { ref: 'Salmo 27:10', text: '"Embora meu pai e minha mãe me abandonem, o Senhor me acolhe."', themes: ['faith', 'grace'] },
+    { ref: 'Romanos 12:10', text: '"Amem-se uns aos outros. Honrem-se mutuamente acima de si mesmos."', themes: ['brotherhood', 'character'] },
+  ]
+};
+
+function drawVerse() {
+  const verseList = versesByLanguage[currentLanguage] || versesByLanguage['en'];
+  const v = verseList[Math.floor(Math.random() * verseList.length)];
+  document.getElementById('verse-text').textContent = v.text;
+  document.getElementById('verse-ref').textContent = '— ' + v.ref;
+}
+
+function copyVerse() {
+  const text = document.getElementById('verse-text').textContent;
+  const ref = document.getElementById('verse-ref').textContent;
+  navigator.clipboard.writeText(text + '\n' + ref).then(() => alert('Verse copied!'));
+}
+
+function filterTheme(theme) {}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const reflection = document.getElementById('reflection');
+  if (reflection) {
+    try { const saved = localStorage.getItem('ff_reflection'); if (saved) reflection.value = saved; } catch (_) {}
+    reflection.addEventListener('change', function() { try { localStorage.setItem('ff_reflection', this.value); } catch (_) {} });
+  }
+});
+
+/* Spinner */
+document.addEventListener('DOMContentLoaded', function() {
+  const canvas = document.getElementById('spinner-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 280, H = 280, cx = 140, cy = 140, R = 120;
+  const spinnerItems = {
+    en: [
+      { label: 'Grateful', q: "What's one thing you're grateful for this week?" },
+      { label: 'Dinner Guest', q: "If you could have dinner with anyone, who?" },
+      { label: 'Bold Moment', q: "What's the bravest thing you've done?" },
+      { label: 'Wished Skill', q: "What skill do you wish you started earlier?" },
+      { label: '10-Year-Old', q: "What would your 10-year-old self say about now?" },
+      { label: 'Looking Ahead', q: "What are you looking forward to this month?" },
+      { label: 'Changed By', q: "What changed how you see the world?" },
+      { label: 'Legacy', q: "What do you want to be remembered for?" }
+    ],
+    es: [
+      { label: 'Agradecido', q: "¿Cuál es una cosa por la que estés agradecido esta semana?" },
+      { label: 'Cena', q: "¿Si pudiera cenar con alguien, quién sería?" },
+      { label: 'Momento Valiente', q: "¿Cuál es lo más valiente que has hecho?" },
+      { label: 'Habilidad Deseada', q: "¿Qué habilidad desearías haber comenzado antes?" },
+      { label: 'Tu Yo de 10 Años', q: "¿Qué diría tu yo de 10 años sobre ahora?" },
+      { label: 'Mirando Adelante', q: "¿A qué estás ansioso este mes?" },
+      { label: 'Cambió Mi Forma de Ver', q: "¿Qué cambió cómo ves el mundo?" },
+      { label: 'Legado', q: "¿Qué quieres que se recuerde de ti?" }
+    ],
+    pt: [
+      { label: 'Grato', q: "Qual é uma coisa que você está grato esta semana?" },
+      { label: 'Jantar', q: "Se pudesse jantar com alguém, quem seria?" },
+      { label: 'Momento Corajoso', q: "Qual é a coisa mais corajosa que você já fez?" },
+      { label: 'Habilidade Desejada', q: "Que habilidade você gostaria de ter começado antes?" },
+      { label: 'Seu Eu de 10 Anos', q: "O que seu eu de 10 anos diria sobre agora?" },
+      { label: 'Olhando para Frente', q: "O que você está ansioso neste mês?" },
+      { label: 'O Que Me Mudou', q: "O que mudou sua forma de ver o mundo?" },
+      { label: 'Legado', q: "O que você quer ser lembrado?" }
+    ]
+  };
+  const items = spinnerItems[currentLanguage];
+  const COLORS = ['#8B7B3D', '#a89d5a', '#8B7B3D', '#a89d5a', '#8B7B3D', '#a89d5a', '#8B7B3D', '#a89d5a'];
+  const N = items.length, SEG = (Math.PI * 2) / N;
+  let angle = 0, vel = 0, spinning = false;
+
+  function drawWheel() {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < N; i++) {
+      const a0 = angle + i * SEG, a1 = a0 + SEG;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, a0, a1); ctx.closePath();
+      ctx.fillStyle = COLORS[i]; ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(a0 + SEG / 2);
+      ctx.textAlign = 'right'; ctx.fillStyle = 'white'; ctx.font = 'bold 10px Inter';
+      ctx.fillText(items[i].label, R - 8, 3); ctx.restore();
+    }
+    ctx.beginPath(); ctx.arc(cx, cy, 16, 0, Math.PI * 2);
+    ctx.fillStyle = '#e8e6e1'; ctx.fill(); ctx.strokeStyle = '#8B7B3D'; ctx.lineWidth = 2.5; ctx.stroke();
+  }
+
+  drawWheel();
+
+  window.spinWheel = function() {
+    if (spinning) return;
+    spinning = true;
+    const currentItems = spinnerItems[currentLanguage];
+    const res = document.getElementById('spinner-result');
+    res.textContent = ''; res.classList.remove('ready');
+    vel = 0.16 + Math.random() * 0.12;
+    (function animate() {
+      angle += vel; vel *= 0.984; drawWheel();
+      if (vel > 0.003) { requestAnimationFrame(animate); return; }
+      const norm = ((-Math.PI / 2 - angle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+      const idx = Math.floor(norm / SEG) % N;
+      res.textContent = '"' + currentItems[idx].q + '"'; res.classList.add('ready'); spinning = false;
+    })();
+  };
+});
+
+/* Prayer - Supabase */
+(function() {
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+  let prayers = [];
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function ago(ts) {
+    if (!ts) return 'just now';
+    const d = Date.now() - new Date(ts).getTime();
+    if (d < 60000) return 'just now';
+    if (d < 3600000) return Math.floor(d / 60000) + 'm ago';
+    if (d < 86400000) return Math.floor(d / 3600000) + 'h ago';
+    return Math.floor(d / 86400000) + 'd ago';
+  }
+
+  function renderPrayers(list) {
+    const el = document.getElementById('prayer-list');
+    if (!list.length) { el.innerHTML = '<p class="prayer-empty">No requests yet — be the first to share one.</p>'; return; }
+    const sorted = [...list].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    el.innerHTML = '';
+    sorted.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'prayer-card';
+      card.innerHTML = `<div class="prayer-body"><p class="prayer-text">${esc(p.text)}</p><p class="prayer-meta">${esc(p.name || 'Anonymous')} · ${ago(p.created_at)}</p></div><button class="lift-btn" onclick="liftPrayer(${p.id}, this)"><span class="lift-icon">🔥</span><span>${p.lifts || 0}</span></button>`;
+      el.appendChild(card);
+    });
+  }
+
+  async function loadPrayers() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers?order=created_at.desc`, {
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+      });
+      if (res.ok) { prayers = await res.json(); renderPrayers(prayers); }
+    } catch (e) {
+      console.error('Load prayers error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        console.error('⚠️ CORS Issue: Add your domain to Supabase CORS settings. Current domain:', currentDomain);
+      }
+      renderPrayers(prayers);
+    }
+  }
+
+  window.addPrayer = async function() {
+    const text = document.getElementById('prayer-text').value.trim();
+    const name = document.getElementById('prayer-name').value.trim() || 'Anonymous';
+    if (!text) return;
+    document.getElementById('prayer-text').value = '';
+    document.getElementById('prayer-name').value = '';
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, name, lifts: 0 })
+      });
+      if (res.ok) { await loadPrayers(); }
+      else { console.error('Prayer save failed:', res.status, res.statusText); }
+    } catch (e) {
+      console.error('Save prayer error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        alert('⚠️ Connection issue: CORS may need to be configured. Check console for details.');
+      }
+    }
+  };
+
+  window.liftPrayer = async function(id, btn) {
+    const prayer = prayers.find(p => p.id === id);
+    if (!prayer) return;
+    const newLifts = (prayer.lifts || 0) + 1;
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/prayers?id=eq.${id}`, {
+        method: 'PATCH',
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lifts: newLifts })
+      });
+      if (res.ok) {
+        prayer.lifts = newLifts;
+        btn.classList.add('lifted');
+        const cnt = btn.querySelector('span:last-child');
+        cnt.textContent = newLifts;
+      }
+    } catch (e) { console.error('Lift prayer error:', e); }
+  };
+
+  window.exportPrayers = function() {
+    const meetingTime = getNextThirdFriday();
+    const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'Unknown';
+    const data = {
+      meetingDate: dateStr, prayerCount: prayers.length, exportedAt: new Date().toISOString(),
+      prayers: prayers.map(p => ({ request: p.text, name: p.name || 'Anonymous', lifts: p.lifts || 0 }))
+    };
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `fire-fellowship-prayers-${dateStr.replace(/\s+/g, '-')}.json`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    alert(`✓ Saved ${prayers.length} prayers`);
+  };
+
+  window.clearPrayersAfterMeeting = async function() {
+    if (!confirm('Save and clear the prayer wall?')) return;
+    window.exportPrayers();
+
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/prayers`, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+      });
+      prayers = [];
+      renderPrayers([]);
+    } catch (e) { console.error('Clear prayers error:', e); }
+  };
+
+  document.addEventListener('DOMContentLoaded', loadPrayers);
+})();
+
+/* RSVP - Supabase */
+(function() {
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+  let rsvps = [];
+
+  function renderRsvps() {
+    const el = document.getElementById('attendees-list');
+    el.innerHTML = '';
+    if (!rsvps.length) {
+      el.innerHTML = '<div style="color: var(--text-3); font-size: 0.9rem; text-align: center; padding: 16px;">No one has confirmed yet — be the first</div>';
+      return;
+    }
+    const sorted = [...rsvps].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    sorted.forEach(r => {
+      const badge = document.createElement('div');
+      badge.className = 'attendee-badge';
+      badge.innerHTML = `<span>${r.name}</span><span class="attendee-checkmark">✓</span>`;
+      el.appendChild(badge);
+    });
+  }
+
+  async function loadRsvps() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps?order=created_at.desc`, {
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+      });
+      if (res.ok) { rsvps = await res.json(); renderRsvps(); }
+    } catch (e) {
+      console.error('Load RSVPs error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        console.error('⚠️ CORS Issue: Add your domain to Supabase CORS settings. Current domain:', currentDomain);
+      }
+      renderRsvps();
+    }
+  }
+
+  window.rsvp = async function() {
+    const name = prompt('What is your name?', '');
+    if (name === null) return;
+    const trimName = name.trim() || 'A brother';
+    const meetingTime = getNextThirdFriday();
+    const dateStr = meetingTime ? meetingTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'the next meeting';
+    const msg = encodeURIComponent(`Hi Freddy! ${trimName} is confirming attendance for Fire & Fellowship on ${dateStr} at 7:00 PM.`);
+    window.open(`https://wa.me/14079252589?text=${msg}`, '_blank');
+
+    try {
+      const meetDate = meetingTime ? meetingTime.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimName, meeting_date: meetDate })
+      });
+      if (res.ok) { await loadRsvps(); }
+      else { console.error('RSVP save failed:', res.status, res.statusText); }
+    } catch (e) {
+      console.error('Save RSVP error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        alert('⚠️ Connection issue: CORS may need to be configured. Check console for details.');
+      }
+    }
+
+    const btn = document.getElementById('rsvp-btn');
+    const msg_el = document.getElementById('confirmed-msg');
+    btn.disabled = true; msg_el.classList.remove('hidden');
+  };
+
+  document.addEventListener('DOMContentLoaded', loadRsvps);
+})();
+
+/* Testimonials - Supabase */
+(function() {
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+  let testimonials = [];
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  function renderTestimonials() {
+    const list = document.getElementById('testimonial-list');
+    const existingCards = list.querySelectorAll('.testimonial-card');
+    existingCards.forEach(card => {
+      if (!card.getAttribute('data-original')) {
+        card.remove();
+      }
+    });
+
+    testimonials.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'testimonial-card';
+      card.innerHTML = `<p class="testimonial-quote">"${esc(t.quote)}"</p><p class="testimonial-author">— ${esc(t.name || 'Anonymous')}</p>`;
+      list.appendChild(card);
+    });
+  }
+
+  async function loadTestimonials() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/testimonies?order=created_at.desc`, {
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+      });
+      if (res.ok) { testimonials = await res.json(); renderTestimonials(); }
+    } catch (e) {
+      console.error('Load testimonials error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        console.error('⚠️ CORS Issue: Add your domain to Supabase CORS settings. Current domain:', currentDomain);
+      }
+      renderTestimonials();
+    }
+  }
+
+  window.showTestimonialForm = function() {
+    const textarea = document.getElementById('testimonial-text');
+    const btn = document.getElementById('testimonial-submit-btn');
+    textarea.style.display = 'block';
+    btn.style.display = 'block';
+    textarea.focus();
+  };
+
+  window.addTestimonial = async function() {
+    const name = document.getElementById('testimonial-name').value.trim() || 'Anonymous';
+    const quote = document.getElementById('testimonial-text').value.trim();
+    if (!quote) return;
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/testimonies`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, quote })
+      });
+      if (res.ok) { await loadTestimonials(); }
+      else { console.error('Testimonial save failed:', res.status, res.statusText); }
+    } catch (e) {
+      console.error('Save testimonial error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        alert('⚠️ Connection issue: CORS may need to be configured. Check console for details.');
+      }
+    }
+
+    document.getElementById('testimonial-name').value = '';
+    document.getElementById('testimonial-text').value = '';
+    document.getElementById('testimonial-text').style.display = 'none';
+    document.getElementById('testimonial-submit-btn').style.display = 'none';
+  };
+
+  document.addEventListener('DOMContentLoaded', loadTestimonials);
+})();
+
+/* Reflections - Supabase */
+(function() {
+  const SUPABASE_URL = 'https://cors-anywhere.herokuapp.com/https://cnilfhgqtbxhtobhrtve.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuaWxmaGdxdGJ4aHRvYmhydHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2OTEyNTgsImV4cCI6MjEwNDI2NzI1OH0.kxdea4en_8P9E_M3Zb6oknWww5axlT7JEF8DqgD5oGs';
+
+  window.saveReflection = async function() {
+    const text = document.getElementById('reflection').value.trim();
+    if (!text) {
+      alert('Please write a reflection first.');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/reflections`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      if (res.ok) {
+        alert('✓ Reflection saved!');
+        document.getElementById('reflection').value = '';
+      } else {
+        console.error('Reflection save failed:', res.status, res.statusText);
+        alert('Error saving reflection. Check console.');
+      }
+    } catch (e) {
+      console.error('Save reflection error:', e);
+      if (e.message.includes('Failed to fetch')) {
+        alert('⚠️ Connection issue: CORS may need to be configured. Check console for details.');
+      }
+    }
+  };
+})();
+</script>
+
+</body>
+</html>

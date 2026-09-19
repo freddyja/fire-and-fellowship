@@ -1,0 +1,123 @@
+{
+  "terms": [
+    { "en": "Holy Spirit", "es": "Espíritu Santo", "pt": "Espírito Santo" },
+    { "en": "Lord Jesus", "es": "Señor Jesús", "pt": "Senhor Jesus" },
+    { "en": "Jesus Christ", "es": "Jesucristo", "pt": "Jesus Cristo" },
+    { "en": "Word of God", "es": "Palabra de Dios", "pt": "Palavra de Deus" },
+    { "en": "Old Testament", "es": "Antiguo Testamento", "pt": "Antigo Testamento" },
+    { "en": "New Testament", "es": "Nuevo Testamento", "pt": "Novo Testamento" },
+    { "en": "Holy Spirit", "es": "Espíritu Santo", "pt": "Espírito Santo" },
+    { "en": "Scripture", "es": "Escritura", "pt": "Escritura" },
+    { "en": "Scriptures", "es": "Escrituras", "pt": "Escrituras" },
+    { "en": "Gospel", "es": "Evangelio", "pt": "Evangelho" },
+    { "en": "Amen", "es": "Amén", "pt": "Amém" },
+    { "en": "Lord", "es": "Señor", "pt": "Senhor" },
+    { "en": "God", "es": "Dios", "pt": "Deus" },
+    { "en": "Jesus", "es": "Jesús", "pt": "Jesus" },
+    { "en": "Christ", "es": "Cristo", "pt": "Cristo" },
+    { "en": "Spirit", "es": "Espíritu", "pt": "Espírito" },
+    { "en": "Father", "es": "Padre", "pt": "Pai" },
+    { "en": "Son", "es": "Hijo", "pt": "Filho" },
+    { "en": "Bible", "es": "Biblia", "pt": "Bíblia" },
+    { "en": "prayer", "es": "oración", "pt": "oração" },
+    { "en": "pray", "es": "orar", "pt": "orar" },
+    { "en": "fellowship", "es": "comunión", "pt": "comunhão" },
+    { "en": "grace", "es": "gracia", "pt": "graça" },
+    { "en": "faith", "es": "fe", "pt": "fé" },
+    { "en": "hope", "es": "esperanza", "pt": "esperança" },
+    { "en": "love", "es": "amor", "pt": "amor" },
+    { "en": "brother", "es": "hermano", "pt": "irmão" },
+    { "en": "brothers", "es": "hermanos", "pt": "irmãos" },
+    { "en": "brotherhood", "es": "hermandad", "pt": "fraternidade" },
+    { "en": "church", "es": "iglesia", "pt": "igreja" },
+    { "en": "salvation", "es": "salvación", "pt": "salvação" },
+    { "en": "sin", "es": "pecado", "pt": "pecado" },
+    { "en": "cross", "es": "cruz", "pt": "cruz" },
+    { "en": "resurrection", "es": "resurrección", "pt": "ressurreição" },
+    { "en": "kingdom", "es": "reino", "pt": "reino" },
+    { "en": "heaven", "es": "cielo", "pt": "céu" },
+    { "en": "mercy", "es": "misericordia", "pt": "misericórdia" },
+    { "en": "peace", "es": "paz", "pt": "paz" },
+    { "en": "wisdom", "es": "sabiduría", "pt": "sabedoria" },
+    { "en": "worship", "es": "adoración", "pt": "adoração" },
+    { "en": "baptism", "es": "bautismo", "pt": "batismo" },
+    { "en": "covenant", "es": "pacto", "pt": "aliança" },
+    { "en": "repentance", "es": "arrepentimiento", "pt": "arrependimento" },
+    { "en": "forgiveness", "es": "perdón", "pt": "perdão" },
+    { "en": "disciple", "es": "discípulo", "pt": "discípulo" },
+    { "en": "pastor", "es": "pastor", "pt": "pastor" },
+    { "en": "Proverbs", "es": "Proverbios", "pt": "Provérbios" },
+    { "en": "Psalms", "es": "Salmos", "pt": "Salmos" },
+    { "en": "Psalm", "es": "Salmo", "pt": "Salmo" },
+    { "en": "Matthew", "es": "Mateo", "pt": "Mateus" },
+    { "en": "Mark", "es": "Marcos", "pt": "Marcos" },
+    { "en": "Luke", "es": "Lucas", "pt": "Lucas" },
+    { "en": "John", "es": "Juan", "pt": "João" },
+    { "en": "Romans", "es": "Romanos", "pt": "Romanos" },
+    { "en": "Ephesians", "es": "Efesios", "pt": "Efésios" },
+    { "en": "Philippians", "es": "Filipenses", "pt": "Filipenses" },
+    { "en": "Colossians", "es": "Colosenses", "pt": "Colossenses" },
+    { "en": "Timothy", "es": "Timoteo", "pt": "Timóteo" },
+    { "en": "Hebrews", "es": "Hebreos", "pt": "Hebreus" },
+    { "en": "James", "es": "Santiago", "pt": "Tiago" },
+    { "en": "Peter", "es": "Pedro", "pt": "Pedro" },
+    { "en": "Revelation", "es": "Apocalipsis", "pt": "Apocalipse" },
+    { "en": "Genesis", "es": "Génesis", "pt": "Gênesis" },
+    { "en": "Exodus", "es": "Éxodo", "pt": "Êxodo" },
+    { "en": "Isaiah", "es": "Isaías", "pt": "Isaías" },
+    { "en": "Jeremiah", "es": "Jeremías", "pt": "Jeremias" },
+    { "en": "Joshua", "es": "Josué", "pt": "Josué" }
+  ],
+  "phrases": [
+    {
+      "en": "As iron sharpens iron, so one man sharpens another.",
+      "es": "Como el hierro afila el hierro, así un hombre afila a otro.",
+      "pt": "Assim como o ferro afia o ferro, um homem afia a outro."
+    },
+    {
+      "en": "Let us pray.",
+      "es": "Oremos.",
+      "pt": "Oremos."
+    },
+    {
+      "en": "Let's pray.",
+      "es": "Oremos.",
+      "pt": "Oremos."
+    },
+    {
+      "en": "The word of the Lord.",
+      "es": "Palabra de Dios.",
+      "pt": "Palavra do Senhor."
+    },
+    {
+      "en": "Thanks be to God.",
+      "es": "Te alabamos, Señor.",
+      "pt": "Graças a Deus."
+    },
+    {
+      "en": "Welcome, brothers.",
+      "es": "Bienvenidos, hermanos.",
+      "pt": "Bem-vindos, irmãos."
+    },
+    {
+      "en": "Peace be with you.",
+      "es": "La paz sea con ustedes.",
+      "pt": "A paz esteja convosco."
+    },
+    {
+      "en": "In Jesus' name.",
+      "es": "En el nombre de Jesús.",
+      "pt": "Em nome de Jesus."
+    },
+    {
+      "en": "In the name of the Father, the Son, and the Holy Spirit.",
+      "es": "En el nombre del Padre, del Hijo y del Espíritu Santo.",
+      "pt": "Em nome do Pai, do Filho e do Espírito Santo."
+    },
+    {
+      "en": "Be strong and courageous.",
+      "es": "Sé fuerte y valiente.",
+      "pt": "Sê forte e corajoso."
+    }
+  ]
+}
